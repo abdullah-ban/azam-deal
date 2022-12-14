@@ -62,9 +62,6 @@ const ProductCard = ({ product }) => {
 
   return (
     <>
-      <Box sx={{ width: "100%" }}>
-        <Skeleton width="100%"></Skeleton>
-      </Box>
       {productList &&
         productList.map((el, index) => {
           return (
