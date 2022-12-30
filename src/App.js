@@ -8,7 +8,13 @@ import ContactUs from "./Components/Pages/ContactUs";
 import ProductDetail from "./Components/Products/ProductDetail";
 import UnlogCart from "./Components/Cart/UnlogCart";
 import Cart from "./Components/Cart/Cart";
+import Dashboard from "./Components/Dashboard/Dashboard";
 import { useEffect, useState } from "react";
+import UpdateProfile from "./Components/Dashboard/UpdateProfile";
+import ShippingDetails from "./Components/Adress & Shipping/ShippingDetails";
+import Payment from "./Components/Adress & Shipping/Payment";
+import AddAddress from "./Components/Adress & Shipping/AddAddress";
+import UpdateAddress from "./Components/Adress & Shipping/UpdateAddress";
 
 function App() {
   const [IsLogin, setIsLogin] = useState();
@@ -29,6 +35,16 @@ function App() {
           {/* Cart */}
           <Route path="/cart-page" element={<Cart />} />
           <Route path="/log-cart" element={<UnlogCart />} />
+
+          {/* UserDashBoard */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/update-profile" element={<UpdateProfile />} />
+
+          {/* Address and shipping Method */}
+          <Route path="/address" element={<ShippingDetails />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/second-address" element={<AddAddress />} />
+          <Route path="/update-address" element={<UpdateAddress />} />
         </Routes>
       </BrowserRouter>
     </>

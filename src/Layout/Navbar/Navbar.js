@@ -5,14 +5,21 @@ import { FiBell } from "react-icons/fi";
 import { FiShoppingCart } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { LinkedinIcon } from "react-share";
+import { Backdrop, CircularProgress, Skeleton } from "@mui/material";
+import { Stack } from "@mui/system";
 
 const Navbar = () => {
   const [isLogin, setIsLogin] = useState();
   const [customerData, setCustomerData] = useState([]);
   const [cartItem, setCartItem] = useState();
 
+  // Loader Hooks
+  const [load, setLoad] = useState(false);
+  const [sLoading, setSLoading] = useState(false);
+
   useEffect(() => {
     const getCustomerData = async () => {
+      setSLoading(true);
       var requestOptions = {
         method: "GET",
         redirect: "follow",
@@ -26,10 +33,11 @@ const Navbar = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           setCustomerData(result.data);
         })
         .catch((error) => console.log("error", error));
+      setSLoading(false);
     };
     getCustomerData();
   }, []);
@@ -53,7 +61,7 @@ const Navbar = () => {
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         setCartItem(result);
       })
       .catch((error) => console.log("error", error));
@@ -61,17 +69,59 @@ const Navbar = () => {
 
   useEffect(() => {
     getTotalCartItems();
+    if (isLogin === null) {
+      setSLoading(false);
+    }
   }, []);
+
+  const handleLoad = () => {};
 
   return (
     <div>
-      <div className="bg-emerald-500 sticky top-0 z-20">
+      <div className="block md:block lg:hidden bg-emerald-500">
+        <div className="flex items-center justify-between">
+          <div className="p-2 ml-2">
+            <img
+              width={150}
+              height={40}
+              src="/azamlogo.jpg"
+              alt="logo"
+              className="mt-2 rounded-md"
+            />
+          </div>
+          <div>
+            <div className="mr-2">
+              {isLogin === "Yes" ? (
+                <h1 className="text-white font-bold font-serif capitalize">
+                  <span className="font-semibold font-sans mr-[2px]">
+                    Welcome,{" "}
+                  </span>
+                  {sLoading && (
+                    <Stack>
+                      <Skeleton
+                        animation="wave"
+                        variant="text"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </Stack>
+                  )}
+                  {customerData.length > 0 &&
+                    customerData[0]["name"].slice(0, 10) + ".."}
+                </h1>
+              ) : (
+                <p className="text-white font-bold">Welcome to AD</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-emerald-500 sticky top-0 z-20 rounded-b-lg md:rounded-b-none lg:rounded-b-none">
         <div className="max-w-screen-2xl mx-auto px-3 sm:px-10">
           <div className="top-bar h-16 lg:h-auto flex items-center justify-between py-4 mx-auto">
             <Link to="/">
               <div
-                className="mr-3 lg:mr-12 xl:mr-12 hidden md:hidden lg:block"
-                onClick={() => {}}
+                className="mr-3 lg:mr-12 xl:mr-12 hidden md:hidden lg:block cursor-pointer"
+                onClick={() => Navigate("/")}
               >
                 <img width={150} height={40} src="/azamlogo.jpg" alt="logo" />
               </div>
@@ -113,7 +163,7 @@ const Navbar = () => {
                 <Link to="/cart-page">
                   <button
                     aria-label="Total"
-                    onClick={() => Navigate("/cart-page")}
+                    onClick={() => setLoad(true)}
                     className="relative px-5 text-white text-2xl font-bold"
                   >
                     <span className="absolute z-10 top-0 right-0 inline-flex items-center justify-center p-1 h-5 w-5 text-xs font-medium leading-none text-red-100 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
@@ -139,18 +189,28 @@ const Navbar = () => {
                 className="pl-5 text-white text-3xl font-bold"
                 aria-label="Login"
               >
-                <Link href="/components/Login/Login">
+                <div>
+                  {sLoading && (
+                    <Stack>
+                      <Skeleton
+                        animation="wave"
+                        variant="circular"
+                        width={40}
+                        height={40}
+                      />
+                    </Stack>
+                  )}
                   {isLogin === "Yes" ? (
-                    <p className="capitalize">
+                    <Link to="/dashboard" className="capitalize">
                       {customerData.length > 0 &&
                         customerData[0]["name"].slice(0, 1)}
-                    </p>
+                    </Link>
                   ) : (
                     <Link to="/login">
                       <FiUser className="w-6 h-6 drop-shadow-xl" />
                     </Link>
                   )}
-                </Link>
+                </div>
               </button>
             </div>
           </div>
@@ -160,6 +220,12 @@ const Navbar = () => {
       {/* <div className="grid grid-cols-10">
         <NavbarCategories />
       </div> */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={load}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

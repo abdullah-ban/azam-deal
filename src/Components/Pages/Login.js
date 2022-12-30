@@ -9,9 +9,13 @@ import { Backdrop, CircularProgress } from "@mui/material";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [inputError, setInputError] = useState("");
   const [pass, setPass] = useState("");
   const [load, setLoad] = useState(false);
+
+  // Error Hooks
+  const [inputError, setInputError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passError, setPassError] = useState("");
 
   let Navigate = useNavigate();
   const handleLogin = (e) => {
@@ -55,6 +59,12 @@ const Login = () => {
           localStorage.setItem("Token", result.token);
           localStorage.setItem("isLogin", "Yes");
           Navigate("/");
+        } else if (result.status === 401) {
+          setPassError(result.message);
+          setLoad(false);
+        } else if (result.status === 404) {
+          setEmailError(result.message);
+          setLoad(false);
         } else {
           setLoad(false);
         }
@@ -78,8 +88,18 @@ const Login = () => {
               If you are already a member, easily log in
             </p>
             {inputError && (
-              <div className="text-xs mt-3 border-2 p-3 rounded-md bg-red-100 border-red-500 text-red-500">
+              <div className="text-xs mt-3 border p-3 rounded-md bg-red-50 border-red-500 text-red-500">
                 {inputError}
+              </div>
+            )}
+            {emailError && (
+              <div className="text-xs mt-3 border p-3 rounded-md bg-red-50 border-red-500 text-red-500">
+                {emailError}
+              </div>
+            )}
+            {passError && (
+              <div className="text-xs mt-3 border p-3 rounded-md bg-red-50 border-red-500 text-red-500">
+                {passError}
               </div>
             )}
             <form action="" className="flex flex-col gap-4">

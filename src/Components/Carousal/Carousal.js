@@ -27,7 +27,7 @@ const Carousal = () => {
             <img
               src="/banner1-home1.jpg"
               alt="Herbal"
-              className="object-cover w-full"
+              className="object-cover w-full h-[250px] md:h-auto lg:h-auto"
             />
           </div>
           <div className="absolute top-0 left-0 z-10 p-r-16 flex-col flex w-full h-full place-items-start justify-center">
@@ -39,9 +39,9 @@ const Carousal = () => {
                 India`s Best Herbals You`ll Find Here
               </p>
               <Link to="/">
-                <a className="hidden sm:inline-block lg:inline-block text-sm leading-6 font-serif font-medium mt-6 px-6 py-2 bg-emerald-500 text-center rounded-md text-white hover:bg-emerald-600">
+                <p className="hidden sm:inline-block lg:inline-block text-sm leading-6 font-serif font-medium mt-6 px-6 py-2 bg-emerald-500 text-center rounded-md text-white hover:bg-emerald-600">
                   Shop Now
-                </a>
+                </p>
               </Link>
             </div>
           </div>

@@ -21,7 +21,12 @@ import {
 import { useEffect, useState } from "react";
 import Layout from "../../Layout/Layout";
 import ProductSideCard from "./ProductSideCard";
-import { Backdrop, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  getListItemSecondaryActionClassesUtilityClass,
+} from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
 
 const ProductDetail = () => {
   const Navigate = useNavigate();
@@ -29,18 +34,15 @@ const ProductDetail = () => {
 
   // lOader Hooks
   const [load, setLoad] = useState(true);
+  const [defaultLoading, setDefaultLoading] = useState(false);
 
   // Product Detail Integration
   const [getProductData, setGetProductData] = useState("");
   const [category, setCategory] = useState("");
   const [variation, setVariation] = useState([]);
 
-  // Add To CArt Hooks
-  const [productId, setProductId] = useState();
-  const [quantity, setQuantity] = useState();
-  const [itemPrice, setItemPrice] = useState();
-  const [totalPrice, setTotalPrice] = useState();
-  const [variationId, setVariationId] = useState();
+  // Local Storage
+  const [isLogin, setIsLogin] = useState();
 
   const getProductDetails = async () => {
     var requestOptions = {
@@ -56,9 +58,10 @@ const ProductDetail = () => {
     )
       .then((response) => response.json())
       .then(async (result) => {
-        console.log(result);
+        // console.log(result);
         setGetProductData(result[0].data);
         setVariation(result[0].data?.variations);
+        setSelectedVariations(result[0].data?.variations[0]);
         setCategory(result[0].category_name);
         if (result.status === 200) {
           setLoad(false);
@@ -71,45 +74,87 @@ const ProductDetail = () => {
 
   useEffect(() => {
     getProductDetails();
+    setIsLogin(localStorage.getItem("isLogin"));
   }, []);
 
-  const handleAddToCart = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+  const [variationId, setVariationId] = useState();
+  const handleAddToCart = async () => {
+    if (isLogin !== "Yes") {
+      Navigate("/login");
+    } else {
+      setDefaultLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      product_id: "10",
-      item_qty: "5",
-      item_price: "100",
-      total_price: "1000",
-      c_id: "2",
-      variation_id: "3",
-    });
+      var raw = JSON.stringify({
+        product_id: getProductData.id,
+        item_qty: item,
+        item_price: selectedVariations.variation_price,
+        total_price: selectedVariations.variation_price * item,
+        c_id: localStorage.getItem("customer_id"),
+        variation_id: variationId ? variationId : selectedVariations.id,
+      });
+      console.log(raw);
 
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      await fetch(
+        "https://team.flymingotech.in/azamDeals/public/api/new_cart",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.status === 1) {
+            toast.success("Added Successfully", {
+              theme: "light",
+              autoClose: "2000",
+            });
+            setDefaultLoading(false);
+          }
+        })
+        .catch((error) => console.log("error", error));
+    }
+  };
+
+  // Variartion
+  const [selectedVariations, setSelectedVariations] = useState([]);
+  const handleGetByVariation = async (id) => {
+    // setLoad(true);
     var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
+      method: "GET",
       redirect: "follow",
     };
-
-    fetch(
-      "https://team.flymingotech.in/azamDeals/public/api/new_cart",
+    // console.log(id);
+    await fetch(
+      `https://team.flymingotech.in/azamDeals/public/api/getdataByV_id/${id}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-        if (result.status === 1) {
-        }
+        // console.log(result);
+        setSelectedVariations(result.variation[0]);
       })
       .catch((error) => console.log("error", error));
+    setLoad(false);
   };
+
+  useEffect(() => {
+    const defaultVariation = async () => {
+      await setVariationId(selectedVariations.id);
+    };
+    defaultVariation();
+  }, []);
 
   return (
     <>
       {load ? (
-        <div className="h-screen bg-white">Still Loading</div>
+        <div className="h-screen bg-white"></div>
       ) : (
         <Layout>
           <div className="px-0 py-10 lg:py-10 font-sans">
@@ -118,7 +163,7 @@ const ProductDetail = () => {
                 <ol className="flex items-center w-full overflow-hidden font-serif">
                   <li className="text-sm pr-1 transition duration-200 ease-in cursor-pointer hover:text-emerald-500 font-semibold">
                     <Link to="/">
-                      <a>Home</a>
+                      <span>Home</span>
                     </Link>
                   </li>
                   <li className="text-sm mt-[1px]">
@@ -140,6 +185,9 @@ const ProductDetail = () => {
                 </ol>
               </div>
               <div className="w-full rounded-lg p-3 lg:p-12 bg-white">
+                <h1 className="block md:block lg:hidden leading-7 text-xl mb-5 md:text-xl lg:text-2xl font-semibold font-serif text-gray-800">
+                  {getProductData && getProductData.product_name}
+                </h1>
                 <div className="flex flex-col xl:flex-row">
                   <div className="flex-shrink-0 xl:pr-10 lg:block w-full mx-auto md:w-6/12 lg:w-5/12 xl:w-4/12">
                     {/* <Discount product={product} slug={true} /> */}
@@ -175,7 +223,7 @@ const ProductDetail = () => {
                     <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row">
                       <div className="w-full md:w-7/12 md:pr-4 lg:pr-4 xl:pr-12">
                         <div className="mb-6">
-                          <h1 className="leading-7 text-lg md:text-xl lg:text-2xl mb-1 font-semibold font-serif text-gray-800">
+                          <h1 className="hidden md:block lg:block leading-7 text-lg md:text-xl lg:text-2xl mb-1 font-semibold font-serif text-gray-800">
                             {getProductData && getProductData.product_name}
                           </h1>
                           <p className="uppercase font-serif font-medium text-gray-500 text-sm">
@@ -204,14 +252,13 @@ const ProductDetail = () => {
                         </div>
                         {/* <Price product={product} /> */}
                         <div className="product-price font-bold text-3xl text-emerald-500">
-                          {getProductData && getProductData.base_price + "/-"}
-                        </div>
-                        <div className="mb-4 md:mb-5 block">
-                          {/* <Stock product={product} /> */}
+                          {selectedVariations &&
+                            selectedVariations.variation_price + "/-"}
                         </div>
                         <div>
                           <p className="text-sm leading-6 text-gray-500 md:leading-7">
-                            {getProductData && getProductData.product_desc}
+                            {selectedVariations &&
+                              selectedVariations.variation_desc}
                           </p>
 
                           <div className="flex items-center mt-4">
@@ -242,7 +289,7 @@ const ProductDetail = () => {
                                 </button>
                               </div>
                               <button
-                                onClick={handleAddToCart}
+                                onClick={() => handleAddToCart(getProductData)}
                                 className="text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-serif text-center justify-center border-0 border-transparent rounded-md focus-visible:outline-none focus:outline-none text-white px-4 ml-4 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white bg-emerald-500 hover:bg-emerald-600 w-full h-12"
                               >
                                 Add To Cart
@@ -263,51 +310,57 @@ const ProductDetail = () => {
                             Variations:
                           </div>
 
-                          {variation &&
-                            variation.map((el, index) => {
-                              return (
-                                <div className="w-auto mt-2" key={index}>
-                                  <ul className="grid w-full md:grid-cols-3">
-                                    <li>
-                                      <input
-                                        type="radio"
-                                        id="hosting-small"
-                                        name="hosting"
-                                        defaultValue="hosting-small"
-                                        className="hidden peer"
-                                        required
-                                      />
-                                      <label
-                                        htmlFor="hosting-small"
-                                        className="inline-flex justify-between items-center p-1 w-auto text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer  dark:peer-checked:text-emerald-500 peer-checked:border-emerald-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100"
-                                      >
-                                        <div className="block">
-                                          <div className="w-full text-lg font-semibold"></div>
-                                          <div className="w-full text-sm font-bold capitalize">
-                                            {el.variation_label}
-                                          </div>
-                                          <div className="w-full text-sm">
-                                            {el.variation_desc}
-                                          </div>
-                                          <div className="w-full text-sm">
-                                            <span className="font-bold capitalize">
-                                              weigth:
-                                            </span>
-                                            {el.variation_weight}
-                                          </div>
-                                          <div className="w-full text-sm">
-                                            <span className="font-bold">
-                                              Price:
-                                            </span>
-                                            {el.variation_price}
-                                          </div>
+                          <div className="grid list-none grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mt-2 gap-2">
+                            {variation &&
+                              variation.map((el, index) => {
+                                return (
+                                  <li key={index}>
+                                    {/* {console.log(variation)} */}
+                                    <input
+                                      type="radio"
+                                      id={el.id}
+                                      name="hosting"
+                                      defaultValue={el.id}
+                                      className="hidden peer"
+                                      defaultChecked={index === 0}
+                                      required
+                                      onChange={(e) =>
+                                        setVariationId(e.target.value)
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={el.id}
+                                      className="inline-flex justify-between items-center p-1 w-full text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer  dark:peer-checked:text-emerald-500 peer-checked:border-emerald-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100"
+                                      onClick={() =>
+                                        handleGetByVariation(el.id)
+                                      }
+                                    >
+                                      <div className="block">
+                                        <div className="w-full text-lg font-semibold"></div>
+                                        <div className="w-full text-sm font-bold capitalize">
+                                          {el.variation_label}
                                         </div>
-                                      </label>
-                                    </li>
-                                  </ul>
-                                </div>
-                              );
-                            })}
+                                        <div className="w-full text-sm">
+                                          {el.variation_desc}
+                                        </div>
+                                        <div className="w-full text-sm">
+                                          <span className="font-bold capitalize">
+                                            weigth:
+                                          </span>
+                                          {el.variation_weight}
+                                        </div>
+                                        <div className="w-full text-sm">
+                                          <span className="font-bold">
+                                            Price:
+                                          </span>
+                                          {el.variation_price}
+                                        </div>
+                                      </div>
+                                    </label>
+                                  </li>
+                                );
+                              })}
+                          </div>
 
                           {/* social share */}
                           <div className="mt-8">
@@ -379,6 +432,13 @@ const ProductDetail = () => {
       >
         <CircularProgress color="success" />
       </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={defaultLoading}
+      >
+        <CircularProgress color="success" />
+      </Backdrop>
+      <ToastContainer />
     </>
   );
 };

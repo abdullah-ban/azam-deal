@@ -8,14 +8,6 @@ import { Backdrop, Box, CircularProgress, Skeleton } from "@mui/material";
 const ProductCard = ({ product }) => {
   const { items, addItem, updateItemQuantity, inCart } = useCart();
 
-  // const handleAddItem = (p) => {
-  //   const newItem = {
-  //     ...p,
-  //     id: p._id,
-  //   };
-  //   addItem(newItem);
-  // };
-
   let Navigate = useNavigate();
 
   const [productList, setProductList] = useState([]);
@@ -28,10 +20,10 @@ const ProductCard = ({ product }) => {
     var raw = JSON.stringify({
       col_name: "product_name",
       order: "ASC",
-      limit: "10",
+      limit: "15",
     });
 
-    var requestOptions = {
+    var requestOptions = { 
       method: "POST",
       headers: myHeaders,
       body: raw,

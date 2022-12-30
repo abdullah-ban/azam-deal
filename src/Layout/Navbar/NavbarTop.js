@@ -58,7 +58,7 @@ const NavbarTop = () => {
               >
                 My account
               </button>
-              <span className="mx-2">|</span>
+              {/* <span className="mx-2">|</span>
               {isLogin === "Yes" ? (
                 <Link
                   to="/login"
@@ -79,7 +79,7 @@ const NavbarTop = () => {
                   </span>
                   <p>Login</p>
                 </Link>
-              )}
+              )} */}
             </div>
           </div>
         </div>

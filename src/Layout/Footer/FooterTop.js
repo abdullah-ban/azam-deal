@@ -30,7 +30,7 @@ const FooterTop = () => {
               </p>
               <div className="mt-8 flex justify-center">
                 <Link to="/banner1.avif">
-                  <a className="mx-2" target="_blank" rel="noreferrer">
+                  <p className="mx-2 mt-6" target="_blank" rel="noreferrer">
                     <img
                       width={170}
                       height={50}
@@ -38,10 +38,10 @@ const FooterTop = () => {
                       src="/app/app-store.svg"
                       alt="app store"
                     />
-                  </a>
+                  </p>
                 </Link>
                 <Link to="/banner3.avif" className="ml-2">
-                  <a target="_blank" rel="noreferrer">
+                  <p target="_blank" rel="noreferrer">
                     <img
                       width={170}
                       height={50}
@@ -49,7 +49,7 @@ const FooterTop = () => {
                       src="/app/play-store.svg"
                       alt="app store"
                     />
-                  </a>
+                  </p>
                 </Link>
               </div>
             </div>

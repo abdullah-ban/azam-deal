@@ -13,12 +13,12 @@ const Banner = () => {
             Organic Product
           </h1>
 
-          <p className="text-gray-500">
+          <div className="text-gray-500">
             See Our latest discounted products from here and get a special
             <Link to="#discount">
-              <a className="text-emerald-600 ml-1">discount product</a>
+              <span className="text-emerald-600 ml-1">discount product</span>
             </Link>
-          </p>
+          </div>
         </div>
         <Link to="/components/Product/ProductDetail">
           <p className="text-sm font-serif font-medium px-6 py-2 bg-emerald-500 text-center rounded-full text-white hover:bg-emerald-700">

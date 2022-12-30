@@ -1,30 +1,63 @@
-import React from 'react';
-import { ImHome } from 'react-icons/im';
-import { BsInfoCircleFill } from 'react-icons/bs';
-import { BsTelephoneFill } from 'react-icons/bs';
-import { RiContactsBookFill } from 'react-icons/ri';
-import { RiAdminFill } from 'react-icons/ri';
-import { RiMailSettingsFill } from 'react-icons/ri';
+import React, { useEffect, useState } from "react";
+import { BiCategoryAlt } from "react-icons/bi";
+import { GiCancel } from "react-icons/gi";
 
 const Sidebar = () => {
-    return (
-        <div>
-            <div>
-                <ul className='text-lg text-black p-5'>
-                    <li className='font-extrabold text-2xl text-gray-600 pb-3'>Information</li>
-                    <hr />
-                    <div className='my-5'>
-                        <li className='flex py-3 px-3'><ImHome className='m-1 mr-3' /><span>Home</span></li>
-                        <li className='flex py-3 px-3'><BsInfoCircleFill className='m-1 mr-3' /><span>About</span></li>
-                        <li className='flex py-3 px-3'><BsTelephoneFill className='m-1 mr-3' /><span>Phone</span></li>
-                        <li className='flex py-3 px-3'><RiContactsBookFill className='m-1 mr-3' /><span>Contact</span></li>
-                        <li className='flex py-3 px-3'><RiAdminFill className='m-1 mr-3' /><span>Admin</span></li>
-                        <li className='flex py-3 px-3'><RiMailSettingsFill className='m-1 mr-3' /><span>Mails</span></li>
-                    </div>
-                </ul>
-            </div>
-        </div>
-    )
-}
+  const [getVar, setGetVar] = useState([]);
 
-export default Sidebar
+  useEffect(() => {
+    var requestOptions = {
+      method: "POST",
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://team.flymingotech.in/azamDeals/public/api/readall/categories",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        setGetVar(result.data);
+      })
+      .catch((error) => console.log("error", error));
+  }, []);
+  return (
+    <div>
+      {console.log(getVar)}
+      <div>
+        <div className="text-lg text-black p-5">
+          <div className="flex items-center justify-between font-extrabold font-sans text-start text-2xl  pb-3 text-emerald-500">
+            <p className="">Azam Deal</p>
+            <button className="text-gray-500">
+              <GiCancel />
+            </button>
+          </div>
+          <hr className="border border-gray-500" />
+          <div>
+            <h1 className="flex items-center font-extrabold text-xl text-gray-700 mt-1 p-1">
+              <BiCategoryAlt />
+              <span className="ml-2 p-2">Categories</span>
+            </h1>
+            <hr />
+            {getVar &&
+              getVar.map((el, index) => {
+                return (
+                  <div  key={index}>
+                    <div className="p-4">
+                      <li className="font-bold text-lg text-black list-disc">
+                        {el.name}
+                      </li>
+                    </div>
+                    <hr />
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;

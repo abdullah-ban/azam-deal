@@ -6,14 +6,21 @@ import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
+import { click } from "@testing-library/user-event/dist/click";
 
 const Login = () => {
   // Hooks
-  const [name, setName] = useState();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState();
   const [contact, setContact] = useState();
   const [password, setPassword] = useState();
   const [isActive, setIsActive] = useState("1");
+
+  // Error Hooks
+  const [nError, setNError] = useState();
+  const [eError, setEError] = useState();
+  const [cError, setCError] = useState();
+  const [pError, setPError] = useState();
 
   // Loader
   const [load, setLoad] = useState(false);
@@ -24,43 +31,55 @@ const Login = () => {
   // API
   const handleRegister = (e) => {
     e.preventDefault();
-    setLoad(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    if (name === "") {
+      setNError("Enter Your Name");
+    } else if (email === "") {
+      setEError("This feild is required");
+    } else if (contact === "") {
+      setCError("This feild is required");
+    } else if (password === "") {
+      setPError("This feild is required");
+    } else {
+      setLoad(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      name: name,
-      email: email,
-      contact: contact,
-      password: password,
-      is_active: isActive,
-    });
+      var raw = JSON.stringify({
+        name: name,
+        email: email,
+        contact: contact,
+        password: password,
+        is_active: isActive,
+      });
+      {
+        console.log(raw);
+      }
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(
-      "https://team.flymingotech.in/azamDeals/public/api/customerreg",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        if (result.status === 201) {
-          Navigate("/login");
-        } else {
-          toast.error("Something went wrong!", {
-            theme: "light",
-            autoClose: "2000",
-          });
-          setLoad(false);
-        }
-      })
-      .catch((error) => console.log("error", error));
+      fetch(
+        "https://team.flymingotech.in/azamDeals/public/api/customerreg",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.status === 201) {
+            Navigate("/login");
+          } else {
+            toast.error("Something went wrong!", {
+              theme: "light",
+              autoClose: "2000",
+            });
+            setLoad(false);
+          }
+        })
+        .catch((error) => console.log("error", error));
+    }
   };
   useEffect(() => {
     console.log(isActive);
@@ -78,11 +97,15 @@ const Login = () => {
               If you are already a member, easily log in
             </p>
             <form action="" className="flex flex-col gap-4">
+              {nError && <div className="text-xs text-red-500">{nError}</div>}
               <input
-                className="p-2 mt-8 rounded-xl border focus:outline-emerald-500"
+                className={`p-2 mt-8 rounded-xl border focus:outline-emerald-500 ${
+                  name !== null ? "border-red-500" : "bodrer"
+                } `}
                 type="text"
                 name="name"
                 placeholder="Name"
+                defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <input
@@ -90,13 +113,16 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 className="p-2 rounded-xl border focus:outline-emerald-500"
                 type="number"
+                maxLength="10"
                 name="email"
                 placeholder="Phone Number"
+                value={contact}
                 onChange={(e) => setContact(e.target.value)}
               />
               <div className="relative">
@@ -105,6 +131,7 @@ const Login = () => {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <AiFillEye className="absolute top-1/2 right-3 -translate-y-1/2" />
@@ -118,6 +145,7 @@ const Login = () => {
               <button
                 onClick={handleRegister}
                 className="bg-emerald-500 rounded-xl text-white py-2 hover:scale-105 duration-300"
+                id={"1"}
               >
                 Register
               </button>
