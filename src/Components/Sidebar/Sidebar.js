@@ -17,14 +17,14 @@ const Sidebar = () => {
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         setGetVar(result.data);
       })
       .catch((error) => console.log("error", error));
   }, []);
   return (
     <div>
-      {console.log(getVar)}
+      {/* {console.log(getVar)} */}
       <div>
         <div className="text-lg text-black p-5">
           <div className="flex items-center justify-between font-extrabold font-sans text-start text-2xl  pb-3 text-emerald-500">
@@ -43,7 +43,7 @@ const Sidebar = () => {
             {getVar &&
               getVar.map((el, index) => {
                 return (
-                  <div  key={index}>
+                  <div key={index}>
                     <div className="p-4">
                       <li className="font-bold text-lg text-black list-disc">
                         {el.name}
@@ -53,6 +53,9 @@ const Sidebar = () => {
                   </div>
                 );
               })}
+            <div className="sticky bottom-0 z-100">
+              <p>Logout</p>
+            </div>
           </div>
         </div>
       </div>

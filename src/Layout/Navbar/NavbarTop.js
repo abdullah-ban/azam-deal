@@ -53,7 +53,7 @@ const NavbarTop = () => {
               </Link>
               <span className="mx-2">|</span>
               <button
-                // onClick={handleModal}
+                onClick={() => Navigate("/dashboard")}
                 className="font-medium hover:text-emerald-600"
               >
                 My account

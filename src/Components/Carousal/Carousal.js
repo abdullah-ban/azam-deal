@@ -12,7 +12,7 @@ const Carousal = () => {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 2000,
+          delay: 8000,
           disableOnInteraction: false,
         }}
         loop={true}

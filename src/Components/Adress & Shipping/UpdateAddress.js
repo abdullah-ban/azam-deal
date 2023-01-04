@@ -77,7 +77,7 @@ const UpdateAddress = () => {
         state: state,
         country: country,
         pincode: pincode,
-        label: label,
+        label: label ? label : "Home",
         first_name: fName,
         last_name: lName,
         mobile_number: mobile,
@@ -108,6 +108,7 @@ const UpdateAddress = () => {
 
   return (
     <div>
+      {console.log(label)}
       <Layout>
         <div className="bg-slate-100 flex justify-center rounded-md">
           <div className="flex items-center m-10 p-5 font-bold text-2xl text-gray-800">

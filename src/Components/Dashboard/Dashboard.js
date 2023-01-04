@@ -75,7 +75,14 @@ const Dashboard = ({ children }) => {
     Navigate("/");
   };
 
-  
+  const handleClickScroll = () => {
+    const element = document.getElementById("section-1");
+    if (element) {
+      // 👇 Will scroll smoothly to the top of the next section
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <Layout>
@@ -146,12 +153,14 @@ const Dashboard = ({ children }) => {
                   Dashboard
                 </h2>
                 <div className="grid gap-4 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                  <Card
-                    title="Total Order"
-                    Icon={FiShoppingCart}
-                    quantity="144"
-                    className="text-red-600  bg-red-200 font-sans"
-                  />
+                  <div onClick={handleClickScroll}>
+                    <Card
+                      title="Total Order"
+                      Icon={FiShoppingCart}
+                      quantity="144"
+                      className="text-red-600  bg-red-200 font-sans"
+                    />
+                  </div>
                   <Card
                     title="Pending Order"
                     Icon={FiRefreshCw}
@@ -171,7 +180,7 @@ const Dashboard = ({ children }) => {
                     className="text-emerald-600 bg-emerald-200 font-sans"
                   />
                 </div>
-                <RecentOrders />
+                <RecentOrders id="section-1" />
               </div>
               {children}
             </div>

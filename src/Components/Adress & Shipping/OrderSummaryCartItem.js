@@ -181,7 +181,7 @@ const OrderSummaryCartItem = (props) => {
                 >
                   <p
                     className={` ${
-                      message === "Coupon Not Available"
+                      message === "Minimum Amount Required"
                         ? "text-red-500"
                         : "text-emerald-600 "
                     }`}

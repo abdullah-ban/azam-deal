@@ -232,7 +232,7 @@ const ShippingDetails = (props) => {
                                             </span>
                                             ,
                                           </span>
-                                          <span className="flex justify-between">
+                                          <span className="flex justify-between flex-row md:flex-col lg:flex-row ">
                                             <span>
                                               Pincode :
                                               <span className="text-gray-700 font-serif ml-1">
@@ -241,7 +241,7 @@ const ShippingDetails = (props) => {
                                                 ,
                                               </span>
                                             </span>
-                                            <div className="flex items-center">
+                                            <div className="flex items-center mt-o lg:mt-0 md:mt-4">
                                               <button
                                                 className="flex items-center mr-2 hover:text-emerald-500 hover:underline"
                                                 onClick={() =>
@@ -329,7 +329,7 @@ const ShippingDetails = (props) => {
                                               </span>
                                               ,
                                             </span>
-                                            <span className="flex justify-between">
+                                            <span className="flex justify-between flex-row md:flex-col lg:flex-row ">
                                               <span>
                                                 Pincode :
                                                 <span className="text-gray-700 font-serif ml-1">
@@ -338,7 +338,7 @@ const ShippingDetails = (props) => {
                                                   ,
                                                 </span>
                                               </span>
-                                              <div className="flex items-center">
+                                              <div className="flex items-center mt-0 md:mt-4 lg:mt-0">
                                                 <button
                                                   className="flex items-center mr-2 hover:text-emerald-500 hover:underline"
                                                   onClick={() =>
@@ -444,7 +444,7 @@ const ShippingDetails = (props) => {
                 )}
                 {showPayment && (
                   <div>
-                    <Payment />
+                      <Payment />
                   </div>
                 )}
               </div>

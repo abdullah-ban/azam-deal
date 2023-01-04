@@ -26,58 +26,64 @@ const Payment = () => {
   const [load, setLoad] = useState(false);
 
   // Hooks
-  const [paymentMethod, setPaymentMethod] = useState();
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [inputError, setInputError] = useState(null);
 
   // Order Generator Integration
   const handleGenerateOrder = async () => {
-    setLoad(true);
     let CID = await localStorage.getItem("customer_id");
     let AddressID = await localStorage.getItem("Address ID");
     let CouponID = await localStorage.getItem("CouponID");
     let CouponValue = await localStorage.getItem("CouponAmount");
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    const msg = "this feild is required";
+    if (paymentMethod === null) {
+      setInputError(msg);
+    } else {
+      setLoad(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      customer_id: CID,
-      address_id: AddressID,
-      coupon_id: CouponID,
-      discount_amount: CouponValue,
-      payment_mode: paymentMethod,
-      payment_status: "Done",
-    });
-    console.log(raw);
-    console.log(raw);
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
+      var raw = JSON.stringify({
+        customer_id: CID,
+        address_id: AddressID,
+        coupon_id: CouponID,
+        discount_amount: CouponValue,
+        payment_mode: paymentMethod,
+        payment_status: "Done",
+      });
+      console.log(raw);
+      console.log(raw);
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-    await fetch(
-      "https://team.flymingotech.in/azamDeals/public/api/generateOrder",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        if (result.status === 200) {
-          toast.success("Order Placed Successfull", {
-            theme: "light",
-            autoClose: "2000",
-          });
-          Navigate("/");
-          setLoad(false);
-        } else {
-          toast.error("Something Went Wrong", {
-            theme: "light",
-            autoClose: "2000",
-          });
-          setLoad(false);
-        }
-      })
-      .catch((error) => console.log("error", error));
+      await fetch(
+        "https://team.flymingotech.in/azamDeals/public/api/generateOrder",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.status === 200) {
+            toast.success("Order Placed Successfull", {
+              theme: "light",
+              autoClose: "2000",
+            });
+            Navigate("/");
+            setLoad(false);
+          } else {
+            toast.error("Something Went Wrong", {
+              theme: "light",
+              autoClose: "2000",
+            });
+            setLoad(false);
+          }
+        })
+        .catch((error) => console.log("error", error));
+    }
   };
 
   // Back Button
@@ -88,6 +94,7 @@ const Payment = () => {
 
   return (
     <>
+      {console.log(paymentMethod)}
       {/* <Layout> */}
       <div className="mx-auto max-w-screen-2xl px-3 sm:px-10">
         <div className="py-10 lg:py-12 px-0 2xl:max-w-screen-2xl w-full xl:max-w-screen-xl flex flex-col md:flex-row lg:flex-row">
@@ -115,6 +122,7 @@ const Payment = () => {
                   <h3 className="font-semibold text-gray-700 p-3">
                     Select Payment Method
                   </h3>
+                  {inputError && <div className="text-red-500 font-semibold">{inputError}</div>}
                   <div className="border border-gray-500 rounded-md">
                     <div className="flex items-center p-2">
                       <input

@@ -153,6 +153,7 @@ const ProductDetail = () => {
 
   return (
     <>
+    {console.log(getProductData)}
       {load ? (
         <div className="h-screen bg-white"></div>
       ) : (
@@ -209,7 +210,7 @@ const ProductDetail = () => {
                         <img
                           src={
                             "https://team.flymingotech.in/azamDeals/public/" +
-                            getProductData.product_images
+                              getProductData.product_images
                           }
                           alt="herbal"
                           layout="responsive"

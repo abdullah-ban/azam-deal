@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ImGoogle } from "react-icons/im";
 import { AiFillEye } from "react-icons/ai";
 import Box from "@mui/material/Box";
@@ -80,9 +80,9 @@ const Login = () => {
     <div>
       <section className="bg-gray-50 min-h-screen flex items-center justify-center">
         {/* login container */}
-        <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl items-center p-5 md:p-0 lg:p-0">
+        <div className="bg-gray-100 h-screen md:h-auto lg:h-auto w-screen flex rounded-2xl shadow-lg max-w-3xl items-center p-5 md:p-0 lg:p-0">
           {/* form */}
-          <div className="md:w-1/2 px-8 md:px-12">
+          <div className="w-full md:w-1/2 px-8 md:px-12">
             <h2 className="font-bold text-2xl text-[#002D74]">Login</h2>
             <p className="text-xs mt-4 text-[#002D74]">
               If you are already a member, easily log in
@@ -109,6 +109,7 @@ const Login = () => {
                 name="email"
                 placeholder="Email"
                 value={email}
+                autoComplete="off"
                 onChange={(e) => setEmail(e.target.value)}
               />
               <div className="relative">
@@ -138,8 +139,8 @@ const Login = () => {
               <ImGoogle className="mx-1" />
               Login with Google
             </button>
-            <div className="mt-5 text-xs border-b border-[#002D74] py-4 text-[#002D74]">
-              <a href="#">Forgot your password?</a>
+            <div className="mt-5 hover:underline hover:text-emerald-500 text-xs border-b border-[#002D74] py-4 text-[#002D74]">
+              <Link to="/forgot-password">Forgot your password?</Link>
             </div>
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
               <p>Don`t have an account?</p>

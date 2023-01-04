@@ -28,12 +28,10 @@ const Cart = () => {
 
   // Items Quantity
   const [totalQuantity, setTotalQuantity] = useState([]);
-  let index = 0;
-  const [items, setItems] = useState(index);
 
   const [cartItem, setCartItem] = useState([]);
   const [totalItem, setTotalItem] = useState();
-  const [totalPrice, setTotalPrice] = useState();
+  const [totalPrice, setTotalPrices] = useState();
 
   const GetAllCartItems = async () => {
     setLoad(true);
@@ -51,23 +49,24 @@ const Cart = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
-        setCartItem(result.data);
+        setCartItem([...result.data]);
         setTotalQuantity(result.data[0].item_qty);
       })
       .catch((error) => console.log("error", error));
     setLoad(false);
   };
 
-  const TotalItem = cartItem.reduce((accumulator, el) => {
-    return accumulator + parseInt(el.item_qty);
-  }, 0);
+
   const TotalPrice = cartItem.reduce((accumulator, el) => {
     return accumulator + parseInt(el.total_price);
   }, 0);
+  const TotalItem = cartItem.reduce((accumulator, el) => {
+    return accumulator + parseInt(el.item_qty);
+  }, 0);
 
   useEffect(() => {
+    setTotalPrices(TotalPrice);
     setTotalItem(TotalItem);
-    setTotalPrice(TotalPrice);
   }, [GetAllCartItems]);
 
   useEffect(() => {
@@ -110,10 +109,88 @@ const Cart = () => {
     await GetAllCartItems();
   };
 
-  const [showUpdate, setShowUpdate] = useState();
+  const [updatedQty, setUpdatedQty] = useState();
 
-  const handleUpdate = (quantity) => {
-    setShowUpdate(false);
+  const CartAddQuantity = async (el) => {
+    let index = 0;
+    // const values = [...cartItem];
+    // values[index].item_qty = parseInt(el.item_qty) + 1;
+    // setCartItem(values);
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      id: el.id,
+      item_qty: parseInt(el.item_qty) + 1,
+    });
+    console.log(raw);
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    await fetch(
+      "https://team.flymingotech.in/azamDeals/public/api/updateQty",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+
+        if (result.status === 200) {
+          setCartItem(result.data)
+        } else {
+          toast.error("Something Went Wrong", {
+            theme: "light",
+            autoClose: "2000",
+          });
+        }
+      })
+      .catch((error) => console.log("error", error));
+     
+  };
+
+  const CartMinusQuantity = async (el) => {
+    let index = 0;
+    // const values = [...cartItem];
+    // values[index].item_qty = el.item_qty - 1;
+    // setCartItem(values);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      id: el.id,
+      item_qty: el.item_qty - 1,
+    });
+    console.log(raw);
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    await fetch(
+      "https://team.flymingotech.in/azamDeals/public/api/updateQty",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        setCartItem(result.data);
+        if (result.status === 200) {
+        } else {
+          toast.error("Something Went Wrong", {
+            theme: "light",
+            autoClose: "2000",
+          });
+        }
+      })
+      .catch((error) => console.log("error", error));
+      
   };
 
   return (
@@ -136,7 +213,7 @@ const Cart = () => {
                 <span>
                   ({totalItem} {""} Items):{" "}
                   <span className="font-bold text-emerald-500">
-                    {"₹" + totalPrice + "/-"}
+                    ₹ {TotalPrice} /-
                   </span>
                 </span>
               </p>
@@ -197,17 +274,17 @@ const Cart = () => {
                                 <p className="mr-2 hidden md:block lg:block">
                                   Qty:{" "}
                                 </p>
-                                <div
-                                  className="flex items-center border text-emerald-500 border-emerald-200 rounded-md p-1"
-                                  onClick={() => setShowUpdate(true)}
-                                >
-                                  <button onClick={(i) => setItems(items - 1)}>
+                                <div className="flex items-center border text-emerald-500 border-emerald-200 rounded-md p-1">
+                                  <button
+                                    onClick={() => CartMinusQuantity(el)}
+                                    disabled={el.item_qty === 1}
+                                  >
                                     <AiOutlineMinus className="text-lg md:text-2xl lg:text-2xl font-semibold mx-2" />
                                   </button>
                                   <span className="text-center text-black px-5 border border-t-white border-b-white border-x-emerald-500">
-                                    {parseInt(el.item_qty) + items}
+                                    {parseInt(el.item_qty)}
                                   </span>
-                                  <button onClick={() => setItems(items + 1)}>
+                                  <button onClick={() => CartAddQuantity(el)}>
                                     <AiOutlinePlus className="text-lg md:text-2xl lg:text-2xl font-semibold mx-2" />
                                   </button>
                                 </div>
@@ -215,21 +292,12 @@ const Cart = () => {
                               <div className="font-bold text-sm block md:hidden lg:hidden mt-2">
                                 <p>
                                   <span className="text-emerald-500 text-xl">
-                                    ₹{el.total_price}.00
+                                    ₹{el.item_price}
+                                    .00
                                   </span>
                                 </p>
                               </div>
                             </div>
-                            {showUpdate && (
-                              <>
-                                <button
-                                  className={`transition-all ease-in-out duration-150 p-2 w-full bg-emerald-500 md:bg-white lg:bg-white md:text-emerald-500 lg:text-emerald-500 outline md:outline-emerald-500 lg:outline-emerald-500 text-white font-semibold mt-2 rounded-md`}
-                                  onClick={() => handleUpdate(el.item_qty)}
-                                >
-                                  Update
-                                </button>
-                              </>
-                            )}
                             <div>
                               <button
                                 className="p-2 w-full bg-red-500 md:bg-white lg:bg-white md:text-red-500 lg:text-red-500 outline md:outline-red-500 lg:outline-red-500 text-white font-semibold mt-2 rounded-md"
@@ -243,7 +311,7 @@ const Cart = () => {
                           <div className="justify-end hidden md:block lg:block font-bold text-sm mt-2">
                             <p>
                               <span className="text-emerald-500 text-xl">
-                                ₹{el.products.base_price}.00
+                                ₹{el.item_price}.00
                               </span>
                             </p>
                           </div>

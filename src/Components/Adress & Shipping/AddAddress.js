@@ -12,27 +12,81 @@ const AddAddress = () => {
 
   // Create Address
 
-  const [address, setAdress] = useState();
-  const [city, setCity] = useState();
-  const [state, setState] = useState();
-  const [country, setCountry] = useState();
-  const [pincode, setPincode] = useState();
-  const [label, setLabel] = useState();
-  const [fName, setFName] = useState();
-  const [lName, setLName] = useState();
-  const [mobile, setMobile] = useState();
-  const [email, setEmail] = useState();
+  const [address, setAdress] = useState(null);
+  const [city, setCity] = useState(null);
+  const [state, setState] = useState(null);
+  const [country, setCountry] = useState(null);
+  const [pincode, setPincode] = useState(null);
+  const [label, setLabel] = useState(null);
+  const [fName, setFName] = useState(null);
+  const [lName, setLName] = useState(null);
+  const [mobile, setMobile] = useState(null);
+  const [email, setEmail] = useState(null);
 
   const [load, setLoad] = useState(false);
 
-  const [fNameError, setFNameError] = useState()
+  const [fNameError, setFNameError] = useState();
+
+  const [IfClicked, setIfClicked] = useState(0);
 
   const handleAddAddress = async (e) => {
+    setFNameError("");
     e.preventDefault();
+    setIfClicked(1);
+    const element = document.getElementById("fname");
     let msg = "this feild is required";
-    if (fName === "") {
+    if (fName === null) {
       setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (fName === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (lName === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (mobile === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (email === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (address === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (city === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (country === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (pincode === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (state === null) {
+      setFNameError(msg);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     } else {
+      setFNameError("");
       // setLoad(true);
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -43,7 +97,7 @@ const AddAddress = () => {
         state: state,
         country: country,
         pincode: pincode,
-        label: label,
+        label: label ? label : "Home",
         customer_id: localStorage.getItem("customer_id"),
         first_name: fName,
         last_name: lName,
@@ -82,6 +136,9 @@ const AddAddress = () => {
           }
         })
         .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        setIfClicked(0);
+      }, 2000);
     }
   };
 
@@ -92,8 +149,9 @@ const AddAddress = () => {
 
   return (
     <div>
+      {console.log(fName)}
       <Layout>
-        <div className="bg-slate-100 flex justify-center rounded-md">
+        <div className="bg-slate-100 flex justify-center rounded-md" id="fname">
           <div className="flex items-center m-10 p-5 font-bold text-2xl text-gray-800">
             <FaMapMarkerAlt />
             <span className="text-gray-800">Add a new address</span>
@@ -116,6 +174,11 @@ const AddAddress = () => {
                       value={fName}
                       onChange={(e) => setFName(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
                     {fNameError && (
                       <div className="text-xs text-red-500 font-semibold ml-2">
@@ -133,7 +196,17 @@ const AddAddress = () => {
                       value={lName || ""}
                       onChange={(e) => setLName(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
 
                   <div className="">
@@ -145,7 +218,17 @@ const AddAddress = () => {
                       value={email || ""}
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
 
                   <div className="">
@@ -157,7 +240,17 @@ const AddAddress = () => {
                       value={mobile || ""}
                       onChange={(e) => setMobile(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -176,7 +269,17 @@ const AddAddress = () => {
                     value={address || ""}
                     onChange={(e) => setAdress(e.target.value)}
                     autoComplete="off"
+                    className={`${
+                      IfClicked === 1 && fName === ""
+                        ? "bg-red-50 border-2 border-red-500"
+                        : "bg-white border border-gray-200"
+                    } `}
                   />
+                  {fNameError && (
+                    <div className="text-xs text-red-500 font-semibold ml-2">
+                      {fNameError}
+                    </div>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-4">
                   <div>
@@ -188,7 +291,17 @@ const AddAddress = () => {
                       value={city || ""}
                       onChange={(e) => setCity(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -200,7 +313,17 @@ const AddAddress = () => {
                       value={state || ""}
                       onChange={(e) => setState(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-4">
@@ -213,7 +336,17 @@ const AddAddress = () => {
                       value={country || ""}
                       onChange={(e) => setCountry(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <InputArea
@@ -225,7 +358,17 @@ const AddAddress = () => {
                       value={pincode}
                       onChange={(e) => setPincode(e.target.value)}
                       autoComplete="off"
+                      className={`${
+                        IfClicked === 1 && fName === ""
+                          ? "bg-red-50 border-2 border-red-500"
+                          : "bg-white border border-gray-200"
+                      } `}
                     />
+                    {fNameError && (
+                      <div className="text-xs text-red-500 font-semibold ml-2">
+                        {fNameError}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -251,6 +394,11 @@ const AddAddress = () => {
                   <option value="Office">Office</option>
                   <option value="Others">Others</option>
                 </select>
+                {fNameError && (
+                  <div className="text-xs text-red-500 font-semibold ml-2">
+                    {fNameError}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col md:flex-row lg:flex-row justify-end mt-10">

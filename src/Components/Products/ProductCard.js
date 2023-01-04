@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
       limit: "15",
     });
 
-    var requestOptions = { 
+    var requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
@@ -58,7 +58,7 @@ const ProductCard = ({ product }) => {
         productList.map((el, index) => {
           return (
             <div
-              className="group box-border overflow-hidden flex rounded-md shadow-sm pe-0 flex-col items-center bg-white relative hover:shadow-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+              className="group box-border overflow-hidden flex rounded-md shadow-sm pe-0 flex-col items-center bg-white relative hover:shadow-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 border hover:border-emerald-300"
               key={index}
             >
               <div

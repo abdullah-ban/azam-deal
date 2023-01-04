@@ -15,6 +15,7 @@ import ShippingDetails from "./Components/Adress & Shipping/ShippingDetails";
 import Payment from "./Components/Adress & Shipping/Payment";
 import AddAddress from "./Components/Adress & Shipping/AddAddress";
 import UpdateAddress from "./Components/Adress & Shipping/UpdateAddress";
+import ForgotPassword from "./Components/Pages/ForgotPassword";
 
 function App() {
   const [IsLogin, setIsLogin] = useState();
@@ -45,6 +46,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/second-address" element={<AddAddress />} />
           <Route path="/update-address" element={<UpdateAddress />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </BrowserRouter>
     </>

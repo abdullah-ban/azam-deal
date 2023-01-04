@@ -11,9 +11,9 @@ import { click } from "@testing-library/user-event/dist/click";
 const Login = () => {
   // Hooks
   const [name, setName] = useState("");
-  const [email, setEmail] = useState();
-  const [contact, setContact] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [password, setPassword] = useState("");
   const [isActive, setIsActive] = useState("1");
 
   // Error Hooks
@@ -21,6 +21,8 @@ const Login = () => {
   const [eError, setEError] = useState();
   const [cError, setCError] = useState();
   const [pError, setPError] = useState();
+  const [emailExist, setEmailExist] = useState();
+  const [phoneExist, setPhoneExist] = useState();
 
   // Loader
   const [load, setLoad] = useState(false);
@@ -31,6 +33,12 @@ const Login = () => {
   // API
   const handleRegister = (e) => {
     e.preventDefault();
+    setNError("");
+    setEError("");
+    setCError("");
+    setPError("");
+    setEmailExist("");
+    setPhoneExist("");
     if (name === "") {
       setNError("Enter Your Name");
     } else if (email === "") {
@@ -70,6 +78,12 @@ const Login = () => {
           console.log(result);
           if (result.status === 201) {
             Navigate("/login");
+          } else if (result.status === 401) {
+            setEmailExist("email already exists");
+            setLoad(false);
+          } else if (result.status === 402) {
+            setPhoneExist("Phone Number already exists :(");
+            setLoad(false);
           } else {
             toast.error("Something went wrong!", {
               theme: "light",
@@ -81,43 +95,54 @@ const Login = () => {
         .catch((error) => console.log("error", error));
     }
   };
-  useEffect(() => {
-    console.log(isActive);
-  }, []);
+
+  const [passLength, setPassLength] = useState();
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
 
   return (
     <>
       <section className="bg-gray-50 min-h-screen flex items-center justify-center">
         {/* login container */}
-        <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl items-center p-5 md:p-0 lg:p-0">
+        <div className="bg-gray-100 h-screen md:h-auto lg:h-auto flex rounded-2xl shadow-lg max-w-3xl items-center p-5 md:p-0 lg:p-0">
           {/* form */}
           <div className="md:w-1/2 px-8 md:px-12">
             <h2 className="font-bold text-2xl text-[#002D74]">Register</h2>
             <p className="text-xs mt-4 text-[#002D74]">
               If you are already a member, easily log in
             </p>
-            <form action="" className="flex flex-col gap-4">
-              {nError && <div className="text-xs text-red-500">{nError}</div>}
+            <form action="" className="flex flex-col">
               <input
-                className={`p-2 mt-8 rounded-xl border focus:outline-emerald-500 ${
-                  name !== null ? "border-red-500" : "bodrer"
-                } `}
+                className={`mt-8 p-2  rounded-xl border focus:outline-emerald-500`}
                 type="text"
                 name="name"
                 placeholder="Name"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
               />
+              {nError && (
+                <figcaption className="text-xs font-semibold text-red-500 ml-2">
+                  {nError}
+                </figcaption>
+              )}
               <input
-                className="p-2 rounded-xl border focus:outline-emerald-500"
+                className="mt-2 p-2 rounded-xl border focus:outline-emerald-500"
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              <div className="text-xs font-semibold text-red-500 ml-2">
+                {eError}
+              </div>
+              <div className="text-xs font-semibold text-red-500 ml-2">
+                {emailExist}
+              </div>
               <input
-                className="p-2 rounded-xl border focus:outline-emerald-500"
+                className="mt-2 p-2 rounded-xl border focus:outline-emerald-500"
                 type="number"
                 maxLength="10"
                 name="email"
@@ -125,15 +150,24 @@ const Login = () => {
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
               />
+              <div className="text-xs font-semibold text-red-500 ml-2">
+                {cError}
+              </div>
+              <div className="text-xs font-semibold text-red-500 ml-2">
+                {phoneExist}
+              </div>
               <div className="relative">
                 <input
-                  className="p-2 rounded-xl border w-full focus:outline-emerald-500"
+                  className="mt-2 p-2 rounded-xl border w-full focus:outline-emerald-500"
                   type="password"
                   name="password"
                   placeholder="Password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handleChangePassword}
                 />
+                <div className="text-xs font-semibold text-red-500 ml-2">
+                  {pError}
+                </div>
                 <AiFillEye className="absolute top-1/2 right-3 -translate-y-1/2" />
                 <input
                   type="hidden"
@@ -142,9 +176,23 @@ const Login = () => {
                   onChange={(e) => setIsActive(e.target.value)}
                 />
               </div>
+              {passLength && (
+                <p
+                  className={`${
+                    password < 4
+                      ? "text-emerald-600"
+                      : "text-gray-500"
+                  } text-xs font-semibold ml-5 mt-1 duration-300 scale-110`}
+                >
+                  {passLength}
+                </p>
+              )}
+              <figcaption className="text-xs text-gray-500 ml-5 mt-1 duration-300 scale-110">
+                Password must have 8 charachter & have special characters.
+              </figcaption>
               <button
                 onClick={handleRegister}
-                className="bg-emerald-500 rounded-xl text-white py-2 hover:scale-105 duration-300"
+                className="bg-emerald-500 rounded-xl mt-5 text-white py-2 hover:scale-105 duration-300"
                 id={"1"}
               >
                 Register
