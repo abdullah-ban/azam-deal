@@ -16,12 +16,52 @@ import Payment from "./Components/Adress & Shipping/Payment";
 import AddAddress from "./Components/Adress & Shipping/AddAddress";
 import UpdateAddress from "./Components/Adress & Shipping/UpdateAddress";
 import ForgotPassword from "./Components/Pages/ForgotPassword";
+import VarifyOTP from "./Components/Pages/Form/VarifyOTP";
+import ResetPassword from "./Components/Pages/ResetPassword";
+import RecentOrders from "./Components/Dashboard/RecentOrders";
+import UpdatePassword from "./Components/Dashboard/UpdatePassword";
+import Success from "./Success";
+import Offline from "./Offline";
+import Search from "./Search/Search";
+import { CartContext } from "./Context/CartContext";
+import CategoryPage from "./Components/Category/CategoryPage";
 
 function App() {
   const [IsLogin, setIsLogin] = useState();
   useEffect(() => {
     setIsLogin(localStorage.getItem("isLogin"));
   }, []);
+
+
+  // useEffect(() => {
+  //   const getTotalCartItems = () => {
+  //     var requestOptions = {
+  //       method: "GET",
+  //       redirect: "follow",
+  //     };
+  
+  //     fetch(
+  //       `https://team.flymingotech.in/azamDeals/public/api/countCartItems/${localStorage.getItem(
+  //         "customer_id"
+  //       )}`,
+  //       requestOptions
+  //     )
+  //       .then((response) => response.json())
+  //       .then((result) => {
+  //         // console.log(result);
+  //         setCart(result);
+  //       })
+  //       .catch(
+  //         (error) => {}
+  //         // console.log("error", error)
+  //       );
+  //   };
+  // }, [])
+  // useEffect(() => {
+  //   window.localStorage.setItem("cart", JSON.stringify(cart));
+  // }, [cart]);
+
+  // const [cart, setCart] = useState({});
   return (
     <>
       <BrowserRouter>
@@ -32,21 +72,37 @@ function App() {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/product-detail" element={<ProductDetail />} />
-
+          <Route path="/product-detail/:id" element={<ProductDetail />} />
+          <Route path="/category-page" element={<CategoryPage />} />
           {/* Cart */}
           <Route path="/cart-page" element={<Cart />} />
           <Route path="/log-cart" element={<UnlogCart />} />
 
           {/* UserDashBoard */}
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/recent-orders" element={<RecentOrders />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
 
           {/* Address and shipping Method */}
           <Route path="/address" element={<ShippingDetails />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/second-address" element={<AddAddress />} />
           <Route path="/update-address" element={<UpdateAddress />} />
+
+          {/* Forget Password */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/vareify-otp" element={<VarifyOTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Success Page */}
+          <Route path="/success" element={<Success />} />
+
+          {/* Offline */}
+          <Route path="/offline" element={<Offline />} />
+
+          {/* Search */}
+          <Route path="/search" element={<Search />} />
         </Routes>
       </BrowserRouter>
     </>

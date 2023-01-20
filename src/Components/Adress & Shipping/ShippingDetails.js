@@ -23,8 +23,7 @@ const steps = ["Shipping Details", "Payment Details"];
 const ShippingDetails = (props) => {
   // Navigate
   let Navigate = useNavigate();
-  const [firstAddress, setFirstAddress] = useState([]);
-  const [secondAddress, setSecondAddress] = useState([]);
+  const [userAddress, setUserAddress] = useState([]);
 
   // Count Address
   const [totalAddress, setTotalAddress] = useState([]);
@@ -57,8 +56,7 @@ const ShippingDetails = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setTotalAddress(result.data.length);
-        setFirstAddress(result.data[0]);
-        setSecondAddress(result.data[1]);
+        setUserAddress(result.data);
       })
       .catch((error) => console.log("error", error));
     setLoad(false);
@@ -122,9 +120,7 @@ const ShippingDetails = (props) => {
 
   return (
     <>
-      {/* {console.log(firstAddress)}
-      {console.log(secondAddress)}
-      {console.log(addressId)} */}
+      {/* {console.log(userAddress[0].id)} */}
       {load ? (
         <div className="h-screen bg-white"></div>
       ) : (
@@ -156,7 +152,7 @@ const ShippingDetails = (props) => {
                                 </span>
                                 Select Address
                               </h1>
-                              {totalAddress < 2 ? (
+                              {totalAddress < 10 ? (
                                 <div>
                                   <button
                                     onClick={handleAddAnotherAddress}
@@ -180,195 +176,98 @@ const ShippingDetails = (props) => {
                               </div>
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
-                              <div className="focus:border-blue-500 focus:border-2">
-                                <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex">
-                                  <li className="w-full">
-                                    <div className="p-2">
-                                      <input
-                                        id="Home"
-                                        type="radio"
-                                        name="list-radio"
-                                        defaultValue={
-                                          (firstAddress && firstAddress.id) ||
-                                          ""
-                                        }
-                                        onChange={(e) =>
-                                          setAddressId(e.target.value)
-                                        }
-                                        className="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                                      />
-                                      <label
-                                        htmlFor="Home"
-                                        className="py-3 ml-2 w-full"
-                                      >
-                                        <span className=" font-bold text-xl text-emerald-500">
-                                          {firstAddress && firstAddress.label}
-                                        </span>
-                                        <div>
-                                          <span>Address :</span>{" "}
-                                          <span className="text-gray-700 font-serif">
-                                            {firstAddress &&
-                                              firstAddress.address_line}
-                                          </span>
-                                        </div>
-                                        <div className="">
-                                          <span>City :</span>{" "}
-                                          <span className="text-gray-700 font-serif ml-1">
-                                            {firstAddress && firstAddress.city},
-                                          </span>
-                                          <p className="">
-                                            <span>Country :</span>
-                                            <span className="text-gray-700 font-serif ml-1">
-                                              {firstAddress &&
-                                                firstAddress.country}
-                                            </span>
-                                            ,
-                                          </p>
-                                          <span className="">
-                                            <span>State :</span>
-                                            <span className="text-gray-700 font-serif ml-1">
-                                              {firstAddress &&
-                                                firstAddress.state}
-                                            </span>
-                                            ,
-                                          </span>
-                                          <span className="flex justify-between flex-row md:flex-col lg:flex-row ">
-                                            <span>
-                                              Pincode :
-                                              <span className="text-gray-700 font-serif ml-1">
-                                                {firstAddress &&
-                                                  firstAddress.pincode}
-                                                ,
+                              {userAddress &&
+                                userAddress.map((el, index) => {
+                                  return (
+                                    <div key={index}>
+                                      <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex">
+                                        <li className="w-full">
+                                          <div className="p-2">
+                                            <input
+                                              id={el.id}
+                                              type="radio"
+                                              name="list-radio"
+                                              defaultValue={el.id || ""}
+                                              // defaultChecked={index === 0}
+                                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                              onChange={(e) =>
+                                                setAddressId(e.target.value)
+                                              }
+                                            />
+                                            <label
+                                              htmlFor={el.id}
+                                              className="py-3 ml-2 w-full"
+                                            >
+                                              <span className=" font-bold text-xl text-emerald-500">
+                                                {el.label}
                                               </span>
-                                            </span>
-                                            <div className="flex items-center mt-o lg:mt-0 md:mt-4">
-                                              <button
-                                                className="flex items-center mr-2 hover:text-emerald-500 hover:underline"
-                                                onClick={() =>
-                                                  handleUpdate(firstAddress)
-                                                }
-                                              >
-                                                <RiEdit2Fill />
-                                                <span>Update</span>
-                                              </button>
-                                              <button
-                                                className="flex items-center hover:text-red-500 hover:underline"
-                                                onClick={() =>
-                                                  handleDeleteAddress(
-                                                    firstAddress.id
-                                                  )
-                                                }
-                                              >
-                                                <MdDelete /> Delete
-                                              </button>
-                                            </div>
-                                          </span>
-                                        </div>
-                                      </label>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-
-                              {secondAddress ? (
-                                <div>
-                                  <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex">
-                                    <li className="w-full">
-                                      <div className="p-2">
-                                        <input
-                                          id="office"
-                                          type="radio"
-                                          name="list-radio"
-                                          defaultValue={
-                                            (secondAddress &&
-                                              secondAddress.id) ||
-                                            ""
-                                          }
-                                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                                          onChange={(e) =>
-                                            setAddressId(e.target.value)
-                                          }
-                                        />
-                                        <label
-                                          htmlFor="office"
-                                          className="py-3 ml-2 w-full"
-                                        >
-                                          <span className=" font-bold text-xl text-emerald-500">
-                                            {secondAddress &&
-                                              secondAddress.label}
-                                          </span>
-                                          <div>
-                                            <span className="">Address :</span>{" "}
-                                            <span className="text-gray-700 font-serif">
-                                              {secondAddress &&
-                                                secondAddress.address_line}
-                                            </span>
-                                          </div>
-                                          <div className="">
-                                            <span>
-                                              <span>City :</span>
-                                              <span className="text-gray-700 font-serif ml-1">
-                                                {secondAddress &&
-                                                  secondAddress.city}
-                                              </span>
-                                              ,
-                                            </span>
-                                            <p className="">
-                                              <span>Country :</span>
-                                              <span className="text-gray-700 font-serif ml-1">
-                                                {secondAddress &&
-                                                  secondAddress.country}
-                                              </span>
-                                              ,
-                                            </p>
-                                            <span className="">
-                                              <span>State :</span>
-                                              <span className="text-gray-700 font-serif ml-1">
-                                                {secondAddress &&
-                                                  secondAddress.state}
-                                              </span>
-                                              ,
-                                            </span>
-                                            <span className="flex justify-between flex-row md:flex-col lg:flex-row ">
-                                              <span>
-                                                Pincode :
-                                                <span className="text-gray-700 font-serif ml-1">
-                                                  {secondAddress &&
-                                                    secondAddress.pincode}
+                                              <div>
+                                                <span className="">
+                                                  Address :
+                                                </span>{" "}
+                                                <span className="text-gray-700 font-serif">
+                                                  {el.address_line}
+                                                </span>
+                                              </div>
+                                              <div className="">
+                                                <span>
+                                                  <span>City :</span>
+                                                  <span className="text-gray-700 font-serif ml-1">
+                                                    {el.city}
+                                                  </span>
                                                   ,
                                                 </span>
-                                              </span>
-                                              <div className="flex items-center mt-0 md:mt-4 lg:mt-0">
-                                                <button
-                                                  className="flex items-center mr-2 hover:text-emerald-500 hover:underline"
-                                                  onClick={() =>
-                                                    handleUpdate(secondAddress)
-                                                  }
-                                                >
-                                                  <RiEdit2Fill />
-                                                  <span>Update</span>
-                                                </button>
-                                                <button
-                                                  className="flex items-center hover:text-red-500 hover:underline"
-                                                  onClick={() =>
-                                                    handleDeleteAddress(
-                                                      secondAddress.id
-                                                    )
-                                                  }
-                                                >
-                                                  <MdDelete /> Delete
-                                                </button>
+                                                <p className="">
+                                                  <span>Country :</span>
+                                                  <span className="text-gray-700 font-serif ml-1">
+                                                    {el.country}
+                                                  </span>
+                                                  ,
+                                                </p>
+                                                <span className="">
+                                                  <span>State :</span>
+                                                  <span className="text-gray-700 font-serif ml-1">
+                                                    {el.state}
+                                                  </span>
+                                                  ,
+                                                </span>
+                                                <span className="flex justify-between flex-row md:flex-col lg:flex-row ">
+                                                  <span>
+                                                    Pincode :
+                                                    <span className="text-gray-700 font-serif ml-1">
+                                                      {el.pincode},
+                                                    </span>
+                                                  </span>
+                                                  <div className="flex items-center mt-0 md:mt-4 lg:mt-0">
+                                                    <button
+                                                      className="flex items-center mr-2 hover:text-emerald-500 hover:underline"
+                                                      onClick={() =>
+                                                        handleUpdate(el)
+                                                      }
+                                                    >
+                                                      <RiEdit2Fill />
+                                                      <span>Update</span>
+                                                    </button>
+                                                    <button
+                                                      className="flex items-center hover:text-red-500 hover:underline"
+                                                      onClick={() =>
+                                                        handleDeleteAddress(
+                                                          el.id
+                                                        )
+                                                      }
+                                                    >
+                                                      <MdDelete /> Delete
+                                                    </button>
+                                                  </div>
+                                                </span>
                                               </div>
-                                            </span>
+                                            </label>
                                           </div>
-                                        </label>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                              ) : (
-                                ""
-                              )}
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
                             </div>
                             <div
                               className={`grid grid-cols-6 gap-4 lg:gap-6  ${
@@ -395,7 +294,7 @@ const ShippingDetails = (props) => {
                                   onClick={handleNext}
                                   // disabled={}
                                   type="submit"
-                                  className="bg-emerald-500 hover:bg-emerald-600 border border-emerald-500 transition-all rounded py-3 text-center text-sm font-serif font-medium text-white flex justify-center w-full"
+                                  className="bg-green-600 hover:bg-emerald-600 border border-emerald-500 transition-all rounded py-3 text-center text-sm font-serif font-medium text-white flex justify-center w-full"
                                 >
                                   <span className="flex justify-center text-center">
                                     Confirm
@@ -443,8 +342,8 @@ const ShippingDetails = (props) => {
                   </div>
                 )}
                 {showPayment && (
-                  <div>
-                      <Payment />
+                  <div className="border rounded-lg bg-white">
+                    <Payment ID={103} />
                   </div>
                 )}
               </div>

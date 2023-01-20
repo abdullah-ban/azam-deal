@@ -14,7 +14,10 @@ import { FiCheck, FiRefreshCw, FiShoppingCart, FiTruck } from "react-icons/fi";
 import Layout from "../../Layout/Layout";
 import Card from "./Card";
 import { HiOutlineDocumentText } from "react-icons/hi";
+import { FaUserAlt } from "react-icons/fa";
 import RecentOrders from "./RecentOrders";
+import { Backdrop, CircularProgress, Skeleton } from "@mui/material";
+import { Stack } from "@mui/system";
 // import { userSidebar } from '@utils/data';
 // import Card from '@component/order-card/Card';
 // import { UserContext } from '@context/UserContext';
@@ -83,6 +86,33 @@ const Dashboard = ({ children }) => {
     }
   };
 
+  const [skeletonLoader, setSkeletonLoader] = useState(true);
+  const [load, setLoad] = useState(false);
+  const [data, setData] = useState([]);
+
+  // useEffect(() => {
+  //   var requestOptions = {
+  //     method: "GET",
+  //     redirect: "follow",
+  //   };
+
+  //   fetch(
+  //     "https://team.flymingotech.in/azamDeals/public/api/customer_address/113",
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       console.log(result);
+  //       setData(result.data[0]);
+  //       if (result.status === 200) {
+  //         setSkeletonLoader(false);
+  //       } else {
+  //         setSkeletonLoader(false);
+  //       }
+  //     })
+  //     .catch((error) => console.log("error", error));
+  // }, []);
+
   return (
     <>
       <Layout>
@@ -95,7 +125,7 @@ const Dashboard = ({ children }) => {
                     className="flex-shrink-0 h-4 w-4"
                     aria-hidden="true"
                   />
-                  <Link to="">
+                  <Link to="/dashboard" onClick={() => setLoad(true)}>
                     <p className="inline-flex items-center justify-between ml-2 text-sm font-medium w-full hover:text-emerald-600 font-sans">
                       Dashboard
                     </p>
@@ -106,7 +136,7 @@ const Dashboard = ({ children }) => {
                     className="flex-shrink-0 h-4 w-4"
                     aria-hidden="true"
                   />
-                  <Link to="">
+                  <Link to="/recent-orders">
                     <p className="inline-flex items-center justify-between ml-2 text-sm font-medium w-full hover:text-emerald-600 font-sans">
                       My Orders
                     </p>
@@ -128,7 +158,7 @@ const Dashboard = ({ children }) => {
                     className="flex-shrink-0 h-4 w-4"
                     aria-hidden="true"
                   />
-                  <Link to="">
+                  <Link to="/update-password">
                     <p className="inline-flex items-center justify-between ml-2 text-sm font-medium w-full hover:text-emerald-600">
                       Change Password
                     </p>
@@ -137,7 +167,7 @@ const Dashboard = ({ children }) => {
                 <span className="p-2 flex font-serif items-center rounded-md hover:bg-gray-50 w-full hover:text-emerald-600">
                   <span className="mr-2">
                     <IoLockOpenOutline />
-                  </span>{" "}
+                  </span>
                   <button
                     className="inline-flex items-center justify-between text-sm font-medium w-full hover:text-emerald-600 font-sans"
                     onClick={handleLogout}
@@ -149,10 +179,43 @@ const Dashboard = ({ children }) => {
             </div>
             <div className="w-full bg-white mt-4 lg:mt-0 p-4 sm:p-5 lg:p-8 rounded-md overflow-hidden">
               <div className="overflow-hidden">
-                <h2 className="text-xl font-serif font-semibold mb-5">
-                  Dashboard
+                <h2 className="flex justify-between items-center text-xl font-serif font-semibold mb-5">
+                  <span></span>
+                  {/* <button
+                    onClick={() => Navigate("/update-profile")}
+                    className="text-sm font-sans p-1 bg-emerald-500 rounded text-white hover:bg-emerald-600"
+                  >
+                    Update Profile
+                  </button> */}
                 </h2>
-                <div className="grid gap-4 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                {/* <hr className="border border-emerald-400" /> */}
+                {/* <div className="p-10">
+                  <div className="flex justify-center">
+                    <div className="p-3 bg-emerald-200 rounded-full">
+                      <FaUserAlt className="h-8 w-8 text-emerald-500 hover:text-emerald-700" />
+                    </div>
+                  </div>
+                  {skeletonLoader && (
+                    <Skeleton animation="wave" className="mt-4 text-center" />
+                  )}
+                  <figcaption className="text-center font-bold text-gray-700 mt-2">
+                    {data && data["name"]}
+                  </figcaption>
+                  {skeletonLoader && (
+                    <Skeleton animation="wave" className="text-center" />
+                  )}
+                  <figcaption className="text-center font-semibold text-gray-500">
+                    {data && data["email"]}
+                  </figcaption>
+                  {skeletonLoader && (
+                    <Skeleton animation="wave" className="text-center" />
+                  )}
+                  <figcaption className="text-center font-semibold text-gray-900">
+                    {data && data["contact"]}
+                  </figcaption>
+                </div> */}
+                {/* <hr className="border border-emerald-400" /> */}
+                {/* <div className="grid gap-4 mb-8 md:grid-cols-2 xl:grid-cols-4 mt-5">
                   <div onClick={handleClickScroll}>
                     <Card
                       title="Total Order"
@@ -179,14 +242,20 @@ const Dashboard = ({ children }) => {
                     quantity="100"
                     className="text-emerald-600 bg-emerald-200 font-sans"
                   />
-                </div>
-                <RecentOrders id="section-1" />
+                </div> */}
+                {/* <RecentOrders id="section-1" /> */}
               </div>
               {children}
             </div>
           </div>
         </div>
       </Layout>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={load}
+      >
+        <CircularProgress color="success" />
+      </Backdrop>
     </>
   );
 };

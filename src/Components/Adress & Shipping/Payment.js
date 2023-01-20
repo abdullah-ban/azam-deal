@@ -19,7 +19,7 @@ import OrderSummaryCartItem from "./OrderSummaryCartItem";
 
 const steps = ["Shipping Details", "Payment Details"];
 
-const Payment = () => {
+const Payment = (props) => {
   let Navigate = useNavigate();
 
   // Loader
@@ -35,55 +35,55 @@ const Payment = () => {
     let AddressID = await localStorage.getItem("Address ID");
     let CouponID = await localStorage.getItem("CouponID");
     let CouponValue = await localStorage.getItem("CouponAmount");
-    const msg = "this feild is required";
-    if (paymentMethod === null) {
-      setInputError(msg);
-    } else {
-      setLoad(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+    // const msg = "this feild is required";
+    // if (paymentMethod === null) {
+    //   setInputError(msg);
+    // } else {
+    setLoad(true);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      var raw = JSON.stringify({
-        customer_id: CID,
-        address_id: AddressID,
-        coupon_id: CouponID,
-        discount_amount: CouponValue,
-        payment_mode: paymentMethod,
-        payment_status: "Done",
-      });
-      console.log(raw);
-      console.log(raw);
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
+    var raw = JSON.stringify({
+      customer_id: CID,
+      address_id: AddressID ? AddressID : props.ID,
+      coupon_id: CouponID,
+      discount_amount: CouponValue,
+      payment_mode: paymentMethod ? paymentMethod : "COD",
+      payment_status: "Done",
+    });
+    console.log(raw);
+    console.log(raw);
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-      await fetch(
-        "https://team.flymingotech.in/azamDeals/public/api/generateOrder",
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          if (result.status === 200) {
-            toast.success("Order Placed Successfull", {
-              theme: "light",
-              autoClose: "2000",
-            });
-            Navigate("/");
-            setLoad(false);
-          } else {
-            toast.error("Something Went Wrong", {
-              theme: "light",
-              autoClose: "2000",
-            });
-            setLoad(false);
-          }
-        })
-        .catch((error) => console.log("error", error));
-    }
+    await fetch(
+      "https://team.flymingotech.in/azamDeals/public/api/generateOrder",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.status === 200) {
+          toast.success("Order Placed Successfull", {
+            theme: "light",
+            autoClose: "2000",
+          });
+          Navigate("/success");
+          setLoad(false);
+        } else {
+          toast.error("Something Went Wrong", {
+            theme: "light",
+            autoClose: "2000",
+          });
+          setLoad(false);
+        }
+      })
+      .catch((error) => console.log("error", error));
+    // }
   };
 
   // Back Button
@@ -122,7 +122,11 @@ const Payment = () => {
                   <h3 className="font-semibold text-gray-700 p-3">
                     Select Payment Method
                   </h3>
-                  {inputError && <div className="text-red-500 font-semibold">{inputError}</div>}
+                  {/* {inputError && (
+                    <div className="text-red-500 font-semibold">
+                      {inputError}
+                    </div>
+                  )} */}
                   <div className="border border-gray-500 rounded-md">
                     <div className="flex items-center p-2">
                       <input
@@ -130,6 +134,7 @@ const Payment = () => {
                         name="cod"
                         id="cod"
                         defaultValue="COD"
+                        defaultChecked
                         onChange={(e) => setPaymentMethod(e.target.value)}
                       />
                       <IoIosCash className="ml-5 text-lg" />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { createSearchParams, Link, useNavigate } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { FiBell } from "react-icons/fi";
 import { FiShoppingCart } from "react-icons/fi";
@@ -8,7 +8,7 @@ import { LinkedinIcon } from "react-share";
 import { Backdrop, CircularProgress, Skeleton } from "@mui/material";
 import { Stack } from "@mui/system";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [isLogin, setIsLogin] = useState();
   const [customerData, setCustomerData] = useState([]);
   const [cartItem, setCartItem] = useState();
@@ -64,7 +64,10 @@ const Navbar = () => {
         // console.log(result);
         setCartItem(result);
       })
-      .catch((error) => console.log("error", error));
+      .catch(
+        (error) => {}
+        // console.log("error", error)
+      );
   };
 
   useEffect(() => {
@@ -74,11 +77,24 @@ const Navbar = () => {
     }
   }, []);
 
-  const handleLoad = () => {};
+  let Navigate = useNavigate();
+
+  const [searchText, setSearchText] = useState("");
+
+  const handleSearch = () => {
+    setLoad(true);
+    Navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        searchText: searchText,
+      }).toString(),
+    });
+  };
 
   return (
     <div>
-      <div className="block md:block lg:hidden bg-emerald-500">
+      {/* {console.log("Navbar=>", props)} */}
+      <div className="block md:block lg:hidden bg-[#008000] bg-gradient-to-b from-[#008000] to-[#16b216]">
         <div className="flex items-center justify-between">
           <div className="p-2 ml-2">
             <img
@@ -115,7 +131,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className="bg-emerald-500 sticky top-0 z-20 rounded-b-lg md:rounded-b-none lg:rounded-b-none">
+      <div className=" bg-gradient-to-t from-[#008000] to-[#16b216] md:bg-gradient-to-l md:from-[#008000] md:to-[#16b216] lg:bg-gradient-to-l lg:from-[#008000] lg:to-[#16b216] sticky top-0 z-20 rounded-b-lg md:rounded-b-none lg:rounded-b-none">
         <div className="max-w-screen-2xl mx-auto px-3 sm:px-10">
           <div className="top-bar h-16 lg:h-auto flex items-center justify-between py-4 mx-auto">
             <Link to="/">
@@ -135,13 +151,15 @@ const Navbar = () => {
                   >
                     <div className="flex items-center py-0.5">
                       <input
-                        // onChange={(e) => setSearchText(e.target.value)}
-                        // value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        // value={}
                         className="form-input w-full pl-5 appearance-none transition ease-in-out border text-input text-sm font-sans rounded-md min-h-10 h-10 duration-200 bg-white focus:ring-0 outline-none border-none focus:outline-none placeholder-gray-500 placeholder-opacity-75"
                         placeholder="Search for products (e.g. fish, apple, oil)"
                       />
                     </div>
                     <button
+                      onClick={handleSearch}
+                      // disabled={searchText === ""}
                       aria-label="Search"
                       type="submit"
                       className="outline-none text-xl text-gray-400 absolute top-0 right-0 end-0 w-12 md:w-14 h-full flex items-center justify-center transition duration-200 ease-in-out hover:text-heading focus:outline-none"

@@ -30,7 +30,7 @@ const NavbarTop = () => {
               We are available 24/7, Need help? Call Us:{" "}
               <a
                 href="tel:+012345609"
-                className="font-bold text-emerald-500 ml-1"
+                className="font-bold text-[#008000] ml-1"
               >
                 +01234560352
               </a>
@@ -38,14 +38,14 @@ const NavbarTop = () => {
 
             <div className="lg:text-right flex items-center cursor-pointer">
               <Link to="/about-us">
-                <div className="font-medium hover:text-emerald-600">
+                <div className="font-medium hover:text-[#008000]">
                   About Us
                 </div>
               </Link>
               <span className="mx-2">|</span>
               <Link to="/contact-us">
                 <p
-                  className="font-medium hover:text-emerald-600"
+                  className="font-medium hover:text-[#008000]"
                   //   onClick={handleLoader}
                 >
                   Contact Us
@@ -54,7 +54,7 @@ const NavbarTop = () => {
               <span className="mx-2">|</span>
               <button
                 onClick={() => Navigate("/dashboard")}
-                className="font-medium hover:text-emerald-600"
+                className="font-medium hover:text-[#008000]"
               >
                 My account
               </button>
@@ -62,7 +62,7 @@ const NavbarTop = () => {
               {isLogin === "Yes" ? (
                 <Link
                   to="/login"
-                  className="flex items-center font-medium hover:text-emerald-600"
+                  className="flex items-center font-medium hover:text-[#008000]"
                 >
                   <span className="mr-1">
                     <BiLogOut />

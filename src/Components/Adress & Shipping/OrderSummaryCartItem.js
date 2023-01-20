@@ -130,7 +130,6 @@ const OrderSummaryCartItem = (props) => {
                       <img
                         key=""
                         src={
-                          "https://team.flymingotech.in/azamDeals/public/" +
                           el.products.product_images
                         }
                         width={40}
@@ -153,7 +152,7 @@ const OrderSummaryCartItem = (props) => {
                       <div className="flex items-center justify-between">
                         <div className="font-bold text-sm md:text-base text-heading leading-5">
                           <span className="text-emerald-500">
-                            ₹{el.total_price}.00
+                            ₹{el.item_price}.00
                           </span>
                         </div>
 

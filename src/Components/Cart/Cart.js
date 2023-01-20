@@ -56,7 +56,6 @@ const Cart = () => {
     setLoad(false);
   };
 
-
   const TotalPrice = cartItem.reduce((accumulator, el) => {
     return accumulator + parseInt(el.total_price);
   }, 0);
@@ -141,7 +140,7 @@ const Cart = () => {
         console.log(result);
 
         if (result.status === 200) {
-          setCartItem(result.data)
+          setCartItem(result.data);
         } else {
           toast.error("Something Went Wrong", {
             theme: "light",
@@ -150,7 +149,6 @@ const Cart = () => {
         }
       })
       .catch((error) => console.log("error", error));
-     
   };
 
   const CartMinusQuantity = async (el) => {
@@ -190,65 +188,72 @@ const Cart = () => {
         }
       })
       .catch((error) => console.log("error", error));
-      
+  };
+
+  const handleNavigateProductDetail = (el) => {
+    localStorage.setItem("Product ID", el.product_id);
+    Navigate("/product-detail");
   };
 
   return (
     <>
-      {/* {console.log(items)} */}
+      {console.log(cartItem.length)}
       {load ? (
         <div className="h-screen bg-white"></div>
       ) : (
         <Layout>
-          <div>
+          <div className="">
             {/* Mobile */}
-            <div className="block md:block lg:hidden p-10 bg-white h-64 rounded-2xl mt-2">
-              <BsFillCheckCircleFill className="text-sm text-emerald-500" />
-              <span className="text-center text-sm text-emerald-500">
-                Your order is eligible for FREE Delivery. Select this option at
-                checkout. Details.
-              </span>
-              <p className="text-xl font-semibold mt-2">
-                Subtotal:{" "}
-                <span>
-                  ({totalItem} {""} Items):{" "}
-                  <span className="font-bold text-emerald-500">
-                    ₹ {TotalPrice} /-
-                  </span>
+            <div className="bg-gradient-to-l from-[#7ae57a]  to-[#008000] fixed z-30 bottom-16 rounded-2xl">
+              <div className="block md:block lg:hidden p-10 bg-white h-64 rounded-t-2xl mt-[2px]">
+                <BsFillCheckCircleFill className="text-sm text-[#008000]" />
+                <span className="text-center text-sm text-[#008000]">
+                  Your order is eligible for FREE Delivery. Select this option
+                  at checkout. Details.
                 </span>
-              </p>
-              <input className="mt-1" type="checkbox" name="" id="" />
-              <span className="mx-2 font-semibold text-sm">
-                This Order Contains a Gift.
-              </span>
-              <div className="mt-5">
-                <button
-                  type="submit"
-                  className="w-full p-2 bg-emerald-500 text-white rounded-md font-semibold"
-                  onClick={handleGoAddress}
-                >
-                  Proceed to Checkout
-                </button>
+                <p className="text-xl font-semibold mt-2">
+                  Subtotal:{" "}
+                  <span>
+                    ({totalItem} {""} Items):{" "}
+                    <span className="font-bold text-[#008000]">
+                      ₹ {TotalPrice} /-
+                    </span>
+                  </span>
+                </p>
+                <input className="mt-1" type="checkbox" name="" id="" />
+                <span className="mx-2 font-semibold text-sm">
+                  This Order Contains a Gift.
+                </span>
+                <div className="mt-5">
+                  <button
+                    type="submit"
+                    className="w-full p-2 bg-[#008000] text-white rounded-md font-semibold"
+                    onClick={handleGoAddress}
+                    disabled={cartItem.length === 0}
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
               </div>
             </div>
             {/* Mobile */}
             <div className="flex flex-col md:flex-col lg:flex-row p-1 md:p-10 lg:p-10">
               <div className="bg-white rounded-2xl w-full mb-5">
                 <div className="p-10 font-bold text-3xl">Shopping Cart</div>
-                <hr className="border-[1px] mx-5 border-emerald-500" />
+                <hr className="border-[1px] mx-5 border-[#008000]" />
                 {cartItem.length > 0 ? (
                   cartItem.map((el, index) => {
                     return (
                       <div key={index}>
                         <div className="flex p-1 pb-5">
-                          <div className="ml-2 md:ml-5 lg:ml-5 mt-7 md:mt-4 lg:mt-4">
+                          <div
+                            className="ml-2 md:ml-5 lg:ml-5 mt-7 md:mt-4 lg:mt-4"
+                            onClick={() => handleNavigateProductDetail(el)}
+                          >
                             <img
-                              src={
-                                "https://team.flymingotech.in/azamDeals/public/" +
-                                el.products.product_images
-                              }
+                              src={el.products.product_images}
                               alt="azamDeal"
-                              className="h-[190px] w-[150px] md:h-[185px] lg:h-[170px] rounded"
+                              className="object-scale-down h-[190px] w-[150px] md:h-[185px] lg:h-[170px] rounded"
                             />
                           </div>
 
@@ -262,7 +267,7 @@ const Cart = () => {
                             </div>
                             <div className="font-semibold text-sm">
                               {el.products.in_stock === 1 ? (
-                                <p className="text-emerald-500 font-bold">
+                                <p className="text-[#008000] font-bold">
                                   In Stock
                                 </p>
                               ) : (
@@ -274,14 +279,14 @@ const Cart = () => {
                                 <p className="mr-2 hidden md:block lg:block">
                                   Qty:{" "}
                                 </p>
-                                <div className="flex items-center border text-emerald-500 border-emerald-200 rounded-md p-1">
+                                <div className="flex items-center border text-[#008000] border-emerald-200 rounded-md p-1">
                                   <button
                                     onClick={() => CartMinusQuantity(el)}
                                     disabled={el.item_qty === 1}
                                   >
                                     <AiOutlineMinus className="text-lg md:text-2xl lg:text-2xl font-semibold mx-2" />
                                   </button>
-                                  <span className="text-center text-black px-5 border border-t-white border-b-white border-x-emerald-500">
+                                  <span className="text-center text-black px-5 border border-t-white border-b-white border-x-[#008000]">
                                     {parseInt(el.item_qty)}
                                   </span>
                                   <button onClick={() => CartAddQuantity(el)}>
@@ -291,7 +296,7 @@ const Cart = () => {
                               </div>
                               <div className="font-bold text-sm block md:hidden lg:hidden mt-2">
                                 <p>
-                                  <span className="text-emerald-500 text-xl">
+                                  <span className="text-[#008000] text-xl">
                                     ₹{el.item_price}
                                     .00
                                   </span>
@@ -310,7 +315,7 @@ const Cart = () => {
                           {/* Third Flex */}
                           <div className="justify-end hidden md:block lg:block font-bold text-sm mt-2">
                             <p>
-                              <span className="text-emerald-500 text-xl">
+                              <span className="text-[#008000] text-xl">
                                 ₹{el.item_price}.00
                               </span>
                             </p>
@@ -340,8 +345,8 @@ const Cart = () => {
                 )}
               </div>
               <div className="hidden md:hidden lg:block sticky top-20 z-50 p-10 bg-white ml-10 h-64 rounded-2xl shadow-xl">
-                <BsFillCheckCircleFill className="text-sm text-emerald-500" />
-                <span className="text-center text-sm text-emerald-500">
+                <BsFillCheckCircleFill className="text-sm text-[#008000]" />
+                <span className="text-center text-sm text-[#008000]">
                   Your order is eligible for FREE Delivery. Select this option
                   at checkout. Details.
                 </span>
@@ -349,7 +354,7 @@ const Cart = () => {
                   Subtotal:{" "}
                   <span>
                     ({totalItem} {""} Items):{" "}
-                    <span className="font-bold text-emerald-500">
+                    <span className="font-bold text-[#008000]">
                       {"₹" + totalPrice + "/-"}
                     </span>
                   </span>
@@ -361,8 +366,9 @@ const Cart = () => {
                 <div className="mt-5">
                   <button
                     type="submit"
-                    className="w-full p-2 bg-emerald-500 text-white hover:bg-emerald-600 rounded-md font-semibold"
+                    className="w-full p-2 bg-[#008000] hover:bg-green-600 text-white rounded-md font-semibold"
                     onClick={handleGoAddress}
+                    disabled={cartItem.length === 0}
                   >
                     Proceed to Checkout
                   </button>

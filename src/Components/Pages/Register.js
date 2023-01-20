@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import { ImGoogle } from "react-icons/im";
 import { AiFillEye } from "react-icons/ai";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { click } from "@testing-library/user-event/dist/click";
+import { BsFillEyeSlashFill } from "react-icons/bs";
 
 const Login = () => {
   // Hooks
@@ -77,7 +78,12 @@ const Login = () => {
         .then((result) => {
           console.log(result);
           if (result.status === 201) {
-            Navigate("/login");
+            Navigate({
+              pathname: "/login",
+              search: createSearchParams({
+                Registered: true,
+              }).toString(),
+            });
           } else if (result.status === 401) {
             setEmailExist("email already exists");
             setLoad(false);
@@ -98,8 +104,20 @@ const Login = () => {
 
   const [passLength, setPassLength] = useState();
 
-  const handleChangePassword = (e) => {
+  const [passwordType, setPasswordType] = useState("password");
+
+  const handleChangePasswordType = (e) => {
+    e.preventDefault();
     setPassword(e.target.value);
+  };
+
+  const togglePassword = (e) => {
+    e.preventDefault();
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
   };
 
   return (
@@ -159,16 +177,22 @@ const Login = () => {
               <div className="relative">
                 <input
                   className="mt-2 p-2 rounded-xl border w-full focus:outline-emerald-500"
-                  type="password"
+                  type={passwordType}
                   name="password"
                   placeholder="Password"
                   value={password}
-                  onChange={handleChangePassword}
+                  onChange={handleChangePasswordType}
                 />
+                <button onClick={togglePassword}>
+                  {passwordType === "password" ? (
+                    <AiFillEye className="cursor-pointer text-xl mt-1 absolute top-1/2 right-3 -translate-y-1/2" />
+                  ) : (
+                    <BsFillEyeSlashFill className="cursor-pointer mt-1 text-lg absolute top-1/2 right-3 -translate-y-1/2" />
+                  )}
+                </button>
                 <div className="text-xs font-semibold text-red-500 ml-2">
                   {pError}
                 </div>
-                <AiFillEye className="absolute top-1/2 right-3 -translate-y-1/2" />
                 <input
                   type="hidden"
                   name=""
@@ -179,9 +203,7 @@ const Login = () => {
               {passLength && (
                 <p
                   className={`${
-                    password < 4
-                      ? "text-emerald-600"
-                      : "text-gray-500"
+                    password < 4 ? "text-emerald-600" : "text-gray-500"
                   } text-xs font-semibold ml-5 mt-1 duration-300 scale-110`}
                 >
                   {passLength}

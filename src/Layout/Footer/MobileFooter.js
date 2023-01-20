@@ -47,13 +47,13 @@ const MobileFooter = () => {
   }, []);
 
   // Total Cart Count Item
-  const getTotalCartItems = () => {
+  const getTotalCartItems = async () => {
     var requestOptions = {
       method: "GET",
       redirect: "follow",
     };
 
-    fetch(
+    await fetch(
       `https://team.flymingotech.in/azamDeals/public/api/countCartItems/${localStorage.getItem(
         "customer_id"
       )}`,
@@ -64,7 +64,10 @@ const MobileFooter = () => {
         // console.log(result);
         setCartItem(result);
       })
-      .catch((error) => console.log("error", error));
+      .catch(
+        (error) => {}
+        // console.log("error", error)
+      );
   };
 
   useEffect(() => {
@@ -76,10 +79,11 @@ const MobileFooter = () => {
 
   return (
     <>
+    {/* {console.log(cartItem)} */}
       <div className="flex flex-col h-full justify-between align-middle bg-white rounded cursor-pointer overflow-y-scroll flex-grow scrollbar-hide w-full">
         {/* <CategoryDrawer className="w-6 h-6 drop-shadow-xl" /> */}
       </div>
-      <div className="lg:hidden fixed z-30 bottom-0 bg-emerald-500 flex items-center justify-between w-full h-16 px-3 sm:px-10">
+      <div className="lg:hidden fixed z-30 bottom-0  bg-gradient-to-l from-[#008000] to-[#16b216] flex items-center justify-between w-full h-16 px-3 sm:px-10">
         <div
           aria-label="Bar"
           className="flex items-center justify-center flex-shrink-0 h-auto relative focus:outline-none"

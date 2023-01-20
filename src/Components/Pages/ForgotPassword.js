@@ -2,7 +2,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { IoReturnDownBack } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { createSearchParams, Link, useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   let Navigate = useNavigate();
@@ -12,6 +12,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [otpMsg, setOtpMsg] = useState();
   const [inputError, setInputError] = useState();
+  const [EmailNotExistError, setEmailNotExistError] = useState();
 
   const handleGenerateOTP = async (e) => {
     e.preventDefault();
@@ -24,10 +25,9 @@ const ForgotPassword = () => {
       myHeaders.append("Content-Type", "application/json");
 
       var raw = JSON.stringify({
-        name: name,
         email: email,
       });
-
+      console.log(raw);
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -35,14 +35,29 @@ const ForgotPassword = () => {
         redirect: "follow",
       };
 
-      await fetch(
-        "https://team.flymingotech.in/azamDeals/public/api/generateOpt",
+      fetch(
+        "https://team.flymingotech.in/azamDeals/public/api/GenerateOtp",
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
           if (result.status === 200) {
+            setOtpMsg("OTP has been sent successfully.");
+            Navigate({
+              pathname: "/vareify-otp",
+              search: createSearchParams({
+                Data: JSON.stringify(result),
+                OTP: result.otp,
+              }).toString(),
+            });
+            setLoad(false);
+          } else if (result.status === 406) {
+            setEmailNotExistError("Email not found, Enter Valid Email");
+            setLoad(false);
+          } else {
+            setOtpMsg("Something went wrong");
+            setLoad(false);
           }
         })
         .catch((error) => console.log("error", error));
@@ -67,21 +82,24 @@ const ForgotPassword = () => {
                 {otpMsg}
               </div>
             )}
-            <form
-              action=""
-              className="flex flex-col gap-4 mt-20 md:mt-0 lg:mt-0"
-            >
-              <input
+            <form action="" className="flex flex-col gap-4 mt-10">
+              {/* <input
                 className="p-2 mt-8 rounded-xl border focus:outline-emerald-500"
                 type="text"
                 placeholder="Name"
-                value={name || ""}
+                value={name}
                 autoComplete="off"
                 onChange={(e) => setName(e.target.value)}
-              />
-              <div className="relative">
+              /> */}
+              <div className="relative mt-20 md:mt-0 lg:mt-0">
+                <label
+                  htmlFor=""
+                  className="text-sm font-bold text-[#002D74] mb-4 ml-1"
+                >
+                  Enter Your Email:
+                </label>
                 <input
-                  className="p-2 rounded-xl border w-full focus:outline-emerald-500"
+                  className="p-2 mt-2 rounded-xl border w-full focus:outline-emerald-500"
                   type="email"
                   name="Email"
                   value={email || ""}
@@ -92,6 +110,11 @@ const ForgotPassword = () => {
                 {inputError && (
                   <div className="text-xs ml-2 text-red-500 font-semibold mt-1">
                     {inputError}
+                  </div>
+                )}
+                {EmailNotExistError && (
+                  <div className="text-xs ml-2 text-red-500 font-semibold mt-1">
+                    {EmailNotExistError}
                   </div>
                 )}
               </div>

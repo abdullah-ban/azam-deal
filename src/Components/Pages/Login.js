@@ -1,13 +1,21 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ImGoogle } from "react-icons/im";
 import { AiFillEye } from "react-icons/ai";
+import { BsFillEyeSlashFill } from "react-icons/bs";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import { light } from "@mui/material/styles/createPalette";
 
 const Login = () => {
+  //
+  //
+
+  let [searchParams] = useSearchParams();
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [load, setLoad] = useState(false);
@@ -16,6 +24,7 @@ const Login = () => {
   const [inputError, setInputError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passError, setPassError] = useState("");
+  const [notVarified, setNotVarified] = useState("");
 
   let Navigate = useNavigate();
   const handleLogin = (e) => {
@@ -65,6 +74,8 @@ const Login = () => {
         } else if (result.status === 404) {
           setEmailError(result.message);
           setLoad(false);
+        } else if (result.data.is_verified !== 1) {
+          setNotVarified("Email not Variefied! please variefy your email address");
         } else {
           setLoad(false);
         }
@@ -74,6 +85,37 @@ const Login = () => {
   const handleRegister = () => {
     setLoad(true);
     Navigate("/register");
+  };
+
+  let TooManyOTPRequest = searchParams.get("tooManyHit");
+  if (TooManyOTPRequest === "YES") {
+    toast.error("Too Many OTP Requests", {
+      theme: "light",
+      autoClose: "2000",
+    });
+  }
+
+  // if (searchParams.get("Registered") === true) {
+  //   toast.error("Registered Successfully", {
+  //     theme: "light",
+  //     autoClose: "2000",
+  //   });
+  // }
+
+  const [passwordType, setPasswordType] = useState("password");
+
+  const handleChangePasswordType = (e) => {
+    e.preventDefault();
+    setPass(e.target.value);
+  };
+
+  const togglePassword = (e) => {
+    e.preventDefault();
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
   };
 
   return (
@@ -102,6 +144,11 @@ const Login = () => {
                 {passError}
               </div>
             )}
+            {notVarified && (
+              <div className="text-xs mt-3 border p-3 rounded-md bg-red-50 border-red-500 text-red-500">
+                {notVarified}
+              </div>
+            )}
             <form action="" className="flex flex-col gap-4">
               <input
                 className="p-2 mt-8 rounded-xl border focus:outline-emerald-500"
@@ -115,13 +162,19 @@ const Login = () => {
               <div className="relative">
                 <input
                   className="p-2 rounded-xl border w-full focus:outline-emerald-500"
-                  type="password"
+                  type={passwordType}
                   name="password"
                   value={pass}
                   placeholder="Password"
-                  onChange={(e) => setPass(e.target.value)}
+                  onChange={handleChangePasswordType}
                 />
-                <AiFillEye className="absolute top-1/2 right-3 -translate-y-1/2" />
+                <button onClick={togglePassword}>
+                  {passwordType === "password" ? (
+                    <AiFillEye className="cursor-pointer text-xl absolute top-1/2 right-3 -translate-y-1/2" />
+                  ) : (
+                    <BsFillEyeSlashFill className="cursor-pointer text-lg absolute top-1/2 right-3 -translate-y-1/2" />
+                  )}
+                </button>
               </div>
               <button
                 onClick={handleLogin}
@@ -164,6 +217,7 @@ const Login = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <ToastContainer />
     </div>
   );
 };

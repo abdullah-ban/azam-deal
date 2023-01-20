@@ -1,4 +1,5 @@
 import React from "react";
+import CategoryBar from "../Components/Category/CategoryBar";
 import FeaturedCard from "./Footer/FeaturedCard";
 import Footer from "./Footer/Footer";
 import FooterTop from "./Footer/FooterTop";
@@ -6,9 +7,10 @@ import MobileFooter from "./Footer/MobileFooter";
 import Navbar from "./Navbar/Navbar";
 import NavbarTop from "./Navbar/NavbarTop";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, serachIntegration, SearchText }) => {
   return (
     <div>
+      {/* {console.log("Layout =>", props)} */}
       {/* <ToastContainer /> */}
       <div className="font-sans">
         <NavbarTop />

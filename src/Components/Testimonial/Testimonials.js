@@ -33,7 +33,7 @@ const Testimonials = () => {
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Deserunt voluptatem alias ut provident sapiente repellendus.
                 </p>
-                <div className="mt-8 flex justify-center gap-0.5 text-green-500">
+                <div className="mt-8 flex justify-center gap-0.5 text-[#008000]">
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
@@ -57,7 +57,7 @@ const Testimonials = () => {
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Deserunt voluptatem alias ut provident sapiente repellendus.
                 </p>
-                <div className="mt-8 flex justify-center gap-0.5 text-green-500">
+                <div className="mt-8 flex justify-center gap-0.5 text-[#008000]">
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
@@ -82,7 +82,7 @@ const Testimonials = () => {
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Deserunt voluptatem alias ut provident sapiente repellendus.
                 </p>
-                <div className="mt-8 flex justify-center gap-0.5 text-green-500">
+                <div className="mt-8 flex justify-center gap-0.5 text-[#008000]">
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
                   <AiTwotoneStar className="text-2xl" />
